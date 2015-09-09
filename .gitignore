@@ -34,19 +34,6 @@ proguard/
 # Log Files
 *.log
 
-<<<<<<< HEAD
-.gradle
-/local.properties
-/.idea/workspace.xml
-/.idea/libraries
-.DS_Store
-/build
-/captures
-# Log Files
-*.log
-
-=======
->>>>>>> first commit
 #iml files
 *.iml
 
