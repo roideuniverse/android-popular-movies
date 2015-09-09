@@ -39,3 +39,6 @@ proguard/
 
 #idea folder
 .idea/
+
+#keys file that contain the API keys
+app/src/main/res/values/keys.xml
