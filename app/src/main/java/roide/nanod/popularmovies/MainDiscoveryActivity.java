@@ -10,10 +10,11 @@ import java.util.List;
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
+import roide.nanod.popularmovies.activites.BaseActivity;
 import roide.nanod.popularmovies.network.apibuilders.DiscoverMoviesRequestBuilder;
 import roide.nanod.popularmovies.network.models.Movie;
 
-public class MainDiscoveryActivity extends AppCompatActivity
+public class MainDiscoveryActivity extends BaseActivity
 {
 
     @Override
@@ -67,5 +68,11 @@ public class MainDiscoveryActivity extends AppCompatActivity
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    protected void findRequiredViews()
+    {
+
     }
 }
