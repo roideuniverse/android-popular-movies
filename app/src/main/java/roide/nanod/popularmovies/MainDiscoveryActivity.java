@@ -2,8 +2,17 @@ package roide.nanod.popularmovies;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+
+import java.util.List;
+
+import retrofit.Callback;
+import retrofit.RetrofitError;
+import retrofit.client.Response;
+import roide.nanod.popularmovies.network.apibuilders.DiscoverMoviesBuilder;
+import roide.nanod.popularmovies.network.models.Movie;
 
 public class MainDiscoveryActivity extends AppCompatActivity
 {
@@ -13,6 +22,27 @@ public class MainDiscoveryActivity extends AppCompatActivity
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_discovery);
+
+        DiscoverMoviesBuilder.build(getApplicationContext())
+                .setPage(1)
+                .setCallback(new Callback<List<Movie>>()
+                {
+                    @Override
+                    public void success(List<Movie> movies, Response response)
+                    {
+                        for(Movie movie : movies)
+                        {
+                            Log.d("kaushik", "title=" + movie.getTitle());
+                        }
+                    }
+
+                    @Override
+                    public void failure(RetrofitError error)
+                    {
+
+                    }
+                })
+                .execute();
     }
 
 
