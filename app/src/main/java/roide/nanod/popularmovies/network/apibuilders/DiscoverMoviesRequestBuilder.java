@@ -15,35 +15,35 @@ import roide.nanod.popularmovies.network.responses.DiscoverMoviesResponse;
 /**
  * Created by roide on 9/9/15.
  */
-public class DiscoverMoviesBuilder extends BaseApiBuilder
+public class DiscoverMoviesRequestBuilder extends BaseApiBuilder
 {
     private int mPageNo = 1;
     private MovieAPI.SortOrder mSortOrder = MovieAPI.SortOrder.MOST_POPULAR;
     private Callback<List<Movie>> mRetrofitCallback;
 
-    public static DiscoverMoviesBuilder build(Context context)
+    public static DiscoverMoviesRequestBuilder build(Context context)
     {
-        return new DiscoverMoviesBuilder(context);
+        return new DiscoverMoviesRequestBuilder(context);
     }
 
-    private DiscoverMoviesBuilder(Context context)
+    private DiscoverMoviesRequestBuilder(Context context)
     {
         super(context);
     }
 
-    public DiscoverMoviesBuilder setPage(int pageNo)
+    public DiscoverMoviesRequestBuilder setPage(int pageNo)
     {
         mPageNo = pageNo;
         return this;
     }
 
-    public DiscoverMoviesBuilder setSortOrder(MovieAPI.SortOrder sortOrder)
+    public DiscoverMoviesRequestBuilder setSortOrder(MovieAPI.SortOrder sortOrder)
     {
         mSortOrder = sortOrder;
         return this;
     }
 
-    public DiscoverMoviesBuilder setCallback(Callback<List<Movie>> callback)
+    public DiscoverMoviesRequestBuilder setCallback(Callback<List<Movie>> callback)
     {
         mRetrofitCallback = callback;
         return this;
