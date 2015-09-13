@@ -1,4 +1,4 @@
-package roide.nanod.popularmovies;
+package roide.nanod.popularmovies.activites;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -10,10 +10,12 @@ import java.util.List;
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
+import roide.nanod.popularmovies.R;
+import roide.nanod.popularmovies.activites.BaseActivity;
 import roide.nanod.popularmovies.network.apibuilders.DiscoverMoviesRequestBuilder;
 import roide.nanod.popularmovies.network.models.Movie;
 
-public class MainDiscoveryActivity extends AppCompatActivity
+public class DiscoveryActivity extends BaseActivity
 {
 
     @Override
@@ -21,26 +23,6 @@ public class MainDiscoveryActivity extends AppCompatActivity
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_discovery);
-
-        DiscoverMoviesRequestBuilder.build(getApplicationContext())
-                .setPage(1)
-                .setCallback(new Callback<List<Movie>>()
-                {
-                    @Override
-                    public void success(List<Movie> movies, Response response)
-                    {
-                        for(Movie movie : movies)
-                        {
-
-                        }
-                    }
-
-                    @Override
-                    public void failure(RetrofitError error)
-                    {
-
-                    }
-                }).execute();
     }
 
 
@@ -67,5 +49,11 @@ public class MainDiscoveryActivity extends AppCompatActivity
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    protected void findRequiredViews()
+    {
+
     }
 }
