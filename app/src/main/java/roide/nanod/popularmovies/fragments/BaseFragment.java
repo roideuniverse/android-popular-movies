@@ -53,6 +53,7 @@ public abstract class BaseFragment extends Fragment
         super.onViewCreated(view, savedInstanceState);
         findRequiredViews(view);
         prepareViews();
+        loadData();
     }
 
     private void throwInvalidActivityException()
@@ -75,4 +76,5 @@ public abstract class BaseFragment extends Fragment
 
     protected abstract void findRequiredViews(View rootView);
     protected abstract void prepareViews();
+    protected abstract void loadData();
 }

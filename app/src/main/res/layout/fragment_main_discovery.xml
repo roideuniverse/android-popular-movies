@@ -7,15 +7,11 @@
     tools:context=".MainDiscoveryActivityFragment"
     >
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        />
-
     <roide.nanod.popularmovies.widgets.SwipeRefreshRecyclerView
         android:id="@+id/main_discovery_swipe_refresh_rv"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:paddingTop="@dimen/half_margins"
         />
 
 </LinearLayout>
