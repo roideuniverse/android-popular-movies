@@ -19,7 +19,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".DetailsActivity"
+            android:name=".activites.DetailsActivity"
             android:label="@string/title_activity_details" >
         </activity>
     </application>

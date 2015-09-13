@@ -1,10 +1,12 @@
-package roide.nanod.popularmovies;
+package roide.nanod.popularmovies.fragments;
 
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
+import roide.nanod.popularmovies.R;
 
 /**
  * A placeholder fragment containing a simple view.

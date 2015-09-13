@@ -1,9 +1,11 @@
-package roide.nanod.popularmovies;
+package roide.nanod.popularmovies.activites;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+
+import roide.nanod.popularmovies.R;
 
 public class DetailsActivity extends AppCompatActivity
 {
