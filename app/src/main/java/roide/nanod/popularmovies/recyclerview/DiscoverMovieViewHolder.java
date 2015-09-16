@@ -7,6 +7,7 @@ import android.widget.ImageView;
 import com.squareup.picasso.Picasso;
 
 import roide.nanod.popularmovies.R;
+import roide.nanod.popularmovies.activites.DetailsActivity;
 import roide.nanod.popularmovies.network.models.Movie;
 
 /**
@@ -26,5 +27,21 @@ public class DiscoverMovieViewHolder extends RecyclerView.ViewHolder
     {
         String url = "http://image.tmdb.org/t/p/w185/" + movie.getPoster_path();
         Picasso.with(itemView.getContext()).load(url).into(mImageView);
+
+        bindOnImageClickListener(mImageView);
     }
+
+    private void bindOnImageClickListener(ImageView imageView)
+    {
+        imageView.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                DetailsActivity.launch(itemView.getContext());
+            }
+        });
+    }
+
+
 }

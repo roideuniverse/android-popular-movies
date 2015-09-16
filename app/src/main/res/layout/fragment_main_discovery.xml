@@ -8,7 +8,7 @@
     android:paddingTop="@dimen/half_margins"
     >
 
-    <roide.nanod.popularmovies.widgets.SwipeRefreshRecyclerView
+    <roide.nanod.popularmovies.ui.SwipeRefreshRecyclerView
         android:id="@+id/main_discovery_swipe_refresh_rv"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

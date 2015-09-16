@@ -1,10 +1,9 @@
-package roide.nanod.popularmovies.widgets;
+package roide.nanod.popularmovies.ui;
 
 import android.content.Context;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
-import android.widget.LinearLayout;
 
 /**
  * Created by roide on 9/9/15.

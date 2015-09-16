@@ -18,7 +18,7 @@ import roide.nanod.popularmovies.network.apibuilders.DiscoverMoviesRequestBuilde
 import roide.nanod.popularmovies.network.models.Movie;
 import roide.nanod.popularmovies.recyclerview.DiscoverAdapter;
 import roide.nanod.popularmovies.recyclerview.DiscoverItemDecor;
-import roide.nanod.popularmovies.widgets.SwipeRefreshRecyclerView;
+import roide.nanod.popularmovies.ui.SwipeRefreshRecyclerView;
 
 /**
  * A placeholder fragment containing a simple view.
