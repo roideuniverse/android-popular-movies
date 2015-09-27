@@ -1,7 +1,6 @@
 package roide.nanod.popularmovies.recyclerview;
 
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 
@@ -29,8 +28,6 @@ public class DiscoverMovieViewHolder extends RecyclerView.ViewHolder
     {
         String url = Util.getW154ImageUrl(movie.getPoster_path());
         Picasso.with(itemView.getContext()).load(url).into(mImageView);
-
-        Log.d("kaushik", "url=" + url);
 
         bindOnImageClickListener(mImageView, movie);
     }
