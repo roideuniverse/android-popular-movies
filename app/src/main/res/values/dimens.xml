@@ -4,4 +4,13 @@
     <dimen name="quarter_margins">4dp</dimen>
     <dimen name="half_margins">8dp</dimen>
     <dimen name="standard_margins">16dp</dimen>
+    <dimen name="double_margins">32dp</dimen>
+
+    <!-- fragment details -->
+    <dimen name="fragment_details_appbar_size">192dp</dimen>
+    <dimen name="fragment_details_rating_left_margin">120dp</dimen>
+    <dimen name="fragment_details_rating_image_size">72dp</dimen>
+    <dimen name="fragment_details_rating_image_group_size">16dp</dimen>
+    <dimen name="fragment_details_movie_display_pic_width">108dp</dimen>
+    <dimen name="fragment_details_dp_container_top_pad">120dp</dimen>
 </resources>
