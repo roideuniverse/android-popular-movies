@@ -20,6 +20,8 @@
             android:layout_height="wrap_content"
             app:contentScrim="@color/transparent_black_t25"
             app:expandedTitleMarginBottom="96dp"
+            app:collapsedTitleTextAppearance="@style/Text.CollapsedAppBarTitle"
+            app:expandedTitleTextAppearance="@style/Text.ExpandedAppBarTitle"
             app:layout_scrollFlags="scroll|exitUntilCollapsed"
             >
 
@@ -50,11 +52,13 @@
         app:layout_behavior="@string/appbar_scrolling_view_behavior"
         >
 
+        <!-- Parent container -->
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:orientation="vertical"
             >
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -62,99 +66,115 @@
                 android:padding="@dimen/standard_margins"
                 >
 
-                <FrameLayout
-                    android:id="@+id/fragment_container_display_pic_container_hidden"
-                    android:layout_width="wrap_content"
+                <ImageView
+                    android:id="@+id/fragment_details_display_pic_hidden"
+                    android:layout_width="@dimen/fragment_details_movie_display_pic_width"
                     android:layout_height="wrap_content"
-                    app:layout_anchor="@+id/appbar"
-                    app:layout_anchorGravity="bottom|left|start"
-                    android:layout_marginLeft="@dimen/standard_margins"
-                    android:padding="@dimen/eighth_margins"
-                    >
-
-                    <ImageView
-                        android:id="@+id/fragment_details_display_pic_hidden"
-                        android:layout_width="@dimen/fragment_details_movie_display_pic_width"
-                        android:layout_height="wrap_content"
-                        android:adjustViewBounds="true"
-                        android:scaleType="centerCrop"
-                        android:transitionName="@string/transition_movie_display_image"
-                        />
-
-                </FrameLayout>
-
-                <LinearLayout
-                    android:layout_width="0dip"
-                    android:layout_height="match_parent"
-                    android:layout_weight="0.5"
-                    android:gravity="center"
-                    android:orientation="vertical"
-                    >
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/fragment_details_release_date"
-                        android:textStyle="bold"
-                        />
-
-                    <TextView
-                        android:id="@+id/fragment_details_release_date"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:textStyle="normal"
-                        />
-
-                </LinearLayout>
+                    android:adjustViewBounds="true"
+                    android:scaleType="centerCrop"
+                    android:alpha="0"
+                    />
 
                 <LinearLayout
                     android:layout_width="0dip"
                     android:layout_height="wrap_content"
-                    android:layout_weight="0.5"
+                    android:layout_weight="1"
                     android:orientation="vertical"
-                    android:padding="@dimen/standard_margins"
                     >
 
-                    <FrameLayout
+                    <TextView
+                        android:id="@+id/fragment_details_movie_name"
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        >
-                        <ImageView
-                            android:id="@+id/fragment_details_rating_image"
-                            android:layout_width="@dimen/fragment_details_rating_image_size"
-                            android:layout_height="@dimen/fragment_details_rating_image_size"
-                            android:background="@drawable/circle_red"
-                            android:layout_gravity="center"
-                            />
-
-                        <TextView
-                            android:id="@+id/fragment_details_rating_value"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            style="@style/Text.Rating"
-                            android:layout_gravity="center"
-                            />
-                    </FrameLayout>
+                        android:layout_height="wrap_content"
+                        android:paddingLeft="@dimen/half_margins"
+                        android:paddingRight="@dimen/half_margins"
+                        android:paddingTop="@dimen/standard_margins"
+                        android:gravity="center"
+                        style="@style/Text.MovieName"
+                        />
 
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:orientation="horizontal"
-                        android:gravity="center_vertical|center"
                         >
 
-                        <ImageView
-                            android:layout_width="@dimen/fragment_details_rating_image_group_size"
-                            android:layout_height="@dimen/fragment_details_rating_image_group_size"
-                            android:src="@drawable/group_icon"
-                            android:padding="2dp"
-                            />
+                        <LinearLayout
+                            android:layout_width="0dip"
+                            android:layout_height="match_parent"
+                            android:layout_weight="0.5"
+                            android:gravity="center"
+                            android:orientation="vertical"
+                            >
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/fragment_details_release_date"
+                                android:textStyle="bold"
+                                />
 
-                        <TextView
-                            android:id="@+id/fragment_details_rating_users_count"
-                            android:layout_width="wrap_content"
+                            <TextView
+                                android:id="@+id/fragment_details_release_date"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textStyle="normal"
+                                />
+
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="0dip"
                             android:layout_height="wrap_content"
-                            android:textSize="14sp"
-                            />
+                            android:layout_weight="0.5"
+                            android:orientation="vertical"
+                            android:padding="@dimen/standard_margins"
+                            >
+
+                            <FrameLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                >
+                                <ImageView
+                                    android:id="@+id/fragment_details_rating_image"
+                                    android:layout_width="@dimen/fragment_details_rating_image_size"
+                                    android:layout_height="@dimen/fragment_details_rating_image_size"
+                                    android:background="@drawable/circle_red"
+                                    android:layout_gravity="center"
+                                    />
+
+                                <TextView
+                                    android:id="@+id/fragment_details_rating_value"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    style="@style/Text.Rating"
+                                    android:layout_gravity="center"
+                                    />
+                            </FrameLayout>
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:orientation="horizontal"
+                                android:gravity="center_vertical|center"
+                                >
+
+                                <ImageView
+                                    android:layout_width="@dimen/fragment_details_rating_image_group_size"
+                                    android:layout_height="@dimen/fragment_details_rating_image_group_size"
+                                    android:src="@drawable/group_icon"
+                                    android:padding="2dp"
+                                    />
+
+                                <TextView
+                                    android:id="@+id/fragment_details_rating_users_count"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:textSize="14sp"
+                                    />
+
+                            </LinearLayout>
+
+                        </LinearLayout>
 
                     </LinearLayout>
 
@@ -166,6 +186,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
                 android:background="@android:color/black"
+                android:paddingLeft="@dimen/standard_margins"
+                android:paddingRight="@dimen/standard_margins"
                 />
 
             <LinearLayout

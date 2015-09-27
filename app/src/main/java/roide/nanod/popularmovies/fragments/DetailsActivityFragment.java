@@ -40,6 +40,7 @@ public class DetailsActivityFragment extends BaseFragment implements AppBarLayou
     private TextView mTvMovieRating;
     private TextView mTvMovieRatingUserCount;
     private TextView mTvMovieSummary;
+    private TextView mTvMovieName;
     private Toolbar mToolbar;
     private AppBarLayout mAppBarLayout;
     private FrameLayout mDPContainer;
@@ -72,6 +73,7 @@ public class DetailsActivityFragment extends BaseFragment implements AppBarLayou
         mIvDisplayPicture = (ImageView) rootView.findViewById(R.id.fragment_details_display_pic);
         mIvDisplayPictureHidden = (ImageView) rootView.findViewById(R.id.fragment_details_display_pic_hidden);
         mDPContainer = (FrameLayout) rootView.findViewById(R.id.fragment_container_display_pic_container);
+        mTvMovieName = (TextView) rootView.findViewById(R.id.fragment_details_movie_name);
         mAppBarLayout = (AppBarLayout) rootView.findViewById(R.id.appbar);
         mAppBarLayout.addOnOffsetChangedListener(this);
     }
@@ -98,6 +100,7 @@ public class DetailsActivityFragment extends BaseFragment implements AppBarLayou
         Picasso.with(getContext()).load(url2).into(mIvDisplayPicture);
         Picasso.with(getContext()).load(url2).into(mIvDisplayPictureHidden);
 
+        mTvMovieName.setText(mMovie.getOriginal_title());
         mTvReleaseDate.setText(mMovie.getRelease_date());
         mTvMovieRating.setText(String.valueOf(mMovie.getVote_average()));
         mTvMovieRatingUserCount.setText( String.valueOf(mMovie.getVote_count()) );
