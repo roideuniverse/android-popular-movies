@@ -10,7 +10,6 @@ import com.squareup.picasso.Picasso;
 import roide.nanod.popularmovies.R;
 import roide.nanod.popularmovies.activites.DetailsActivity;
 import roide.nanod.popularmovies.network.models.Movie;
-import roide.nanod.popularmovies.ui.ViewLocation;
 
 /**
  * Created by kaushiksaurabh on 9/12/15.
@@ -42,7 +41,7 @@ public class DiscoverMovieViewHolder extends RecyclerView.ViewHolder
             @Override
             public void onClick(View v)
             {
-                DetailsActivity.launch(itemView.getContext(), movie, ViewLocation.getLocation(v), v);
+                DetailsActivity.launch(itemView.getContext(), movie, v);
             }
         });
     }

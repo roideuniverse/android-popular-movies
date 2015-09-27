@@ -6,23 +6,19 @@ import android.content.Intent;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 
 import roide.nanod.popularmovies.R;
 import roide.nanod.popularmovies.fragments.DetailsActivityFragment;
 import roide.nanod.popularmovies.network.models.Movie;
-import roide.nanod.popularmovies.ui.ViewLocation;
 
 public class DetailsActivity extends BaseActivity
 {
     private static final String PREV_VIEW_LOCATION = "prev-view-location";
     private static final String MOVIE_DETAILS = "movie-details";
 
-    public static void launch(Context context, Movie movie, ViewLocation viewLocation, View view)
+    public static void launch(Context context, Movie movie, View view)
     {
         Activity activity = (Activity) context;
         ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(
@@ -32,13 +28,11 @@ public class DetailsActivity extends BaseActivity
 
         Intent intent = new Intent(context, DetailsActivity.class);
         intent.putExtra(MOVIE_DETAILS, movie);
-        intent.putExtra(PREV_VIEW_LOCATION, viewLocation);
         //context.startActivity(intent);
         ActivityCompat.startActivity(activity, intent, options.toBundle());
     }
 
     private Movie mMovie;
-    private ViewLocation mPrevLocation;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -48,7 +42,7 @@ public class DetailsActivity extends BaseActivity
         prepareActionBar();
         readIntent();
 
-        DetailsActivityFragment fragment = DetailsActivityFragment.newInstance(mMovie, mPrevLocation);
+        DetailsActivityFragment fragment = DetailsActivityFragment.newInstance(mMovie);
         getSupportFragmentManager()
                 .beginTransaction()
                 .replace(R.id.fragment_container, fragment)
@@ -58,7 +52,6 @@ public class DetailsActivity extends BaseActivity
     private void readIntent()
     {
         mMovie = getIntent().getParcelableExtra(MOVIE_DETAILS);
-        mPrevLocation = getIntent().getParcelableExtra(PREV_VIEW_LOCATION);
     }
 
     @Override

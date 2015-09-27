@@ -13,12 +13,9 @@ import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 
-import org.w3c.dom.Text;
-
 import roide.nanod.popularmovies.R;
 import roide.nanod.popularmovies.exceptions.ActivityClosingException;
 import roide.nanod.popularmovies.network.models.Movie;
-import roide.nanod.popularmovies.ui.ViewLocation;
 
 /**
  * A placeholder fragment containing a simple view.
@@ -27,7 +24,7 @@ public class DetailsActivityFragment extends BaseFragment
 {
     private static final String ARG_MOVIE = "arg-movie";
 
-    public static DetailsActivityFragment newInstance(Movie movie, ViewLocation viewLocation)
+    public static DetailsActivityFragment newInstance(Movie movie)
     {
         DetailsActivityFragment fragment = new DetailsActivityFragment();
         Bundle args = new Bundle();
