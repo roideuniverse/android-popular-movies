@@ -66,6 +66,16 @@ public class Movie implements Parcelable
         return poster_path;
     }
 
+    public String getBackdrop_path()
+    {
+        return backdrop_path;
+    }
+
+    public int getVote_count()
+    {
+        return vote_count;
+    }
+
     @Override
     public int describeContents()
     {
@@ -81,6 +91,9 @@ public class Movie implements Parcelable
         destination.writeString(release_date);
         destination.writeString(title);
         destination.writeString(poster_path);
+        destination.writeString(backdrop_path);
+
+        destination.writeInt(vote_count);
 
         destination.writeFloat(popularity);
         destination.writeFloat(vote_average);
@@ -107,6 +120,9 @@ public class Movie implements Parcelable
         release_date = source.readString();
         title = source.readString();
         poster_path = source.readString();
+        backdrop_path = source.readString();
+
+        vote_count = source.readInt();
 
         popularity = source.readFloat();
         vote_average = source.readFloat();

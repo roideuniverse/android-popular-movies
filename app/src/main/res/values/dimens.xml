@@ -4,4 +4,11 @@
     <dimen name="quarter_margins">4dp</dimen>
     <dimen name="half_margins">8dp</dimen>
     <dimen name="standard_margins">16dp</dimen>
+    <dimen name="double_margins">32dp</dimen>
+
+    <!-- fragment details -->
+    <dimen name="fragment_details_appbar_size">192dp</dimen>
+
+    <!-- rounder corner widget -->
+    <dimen name="rounded_display_pic_size">108dp</dimen>
 </resources>
