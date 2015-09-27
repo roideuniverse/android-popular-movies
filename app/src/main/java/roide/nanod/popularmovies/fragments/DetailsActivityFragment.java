@@ -13,6 +13,7 @@ import com.squareup.picasso.Picasso;
 import roide.nanod.popularmovies.R;
 import roide.nanod.popularmovies.exceptions.ActivityClosingException;
 import roide.nanod.popularmovies.network.models.Movie;
+import roide.nanod.popularmovies.util.Util;
 
 /**
  * A placeholder fragment containing a simple view.
@@ -81,10 +82,10 @@ public class DetailsActivityFragment extends BaseFragment
             return;
         }
 
-        String url = "http://image.tmdb.org/t/p/w500" + mMovie.getBackdrop_path();
+        String url = Util.getW500ImageUrl(mMovie.getBackdrop_path());
         Picasso.with(getContext()).load(url).into(mIvHeaderImageView);
 
-        String url2 = "http://image.tmdb.org/t/p/w154" + mMovie.getPoster_path();
+        String url2 = Util.getW154ImageUrl(mMovie.getPoster_path());
         Picasso.with(getContext()).load(url2).into(mIvDisplayPicture);
 
         mTvReleaseDate.setText(mMovie.getRelease_date());

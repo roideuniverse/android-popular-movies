@@ -10,6 +10,7 @@ import com.squareup.picasso.Picasso;
 import roide.nanod.popularmovies.R;
 import roide.nanod.popularmovies.activites.DetailsActivity;
 import roide.nanod.popularmovies.network.models.Movie;
+import roide.nanod.popularmovies.util.Util;
 
 /**
  * Created by kaushiksaurabh on 9/12/15.
@@ -26,7 +27,7 @@ public class DiscoverMovieViewHolder extends RecyclerView.ViewHolder
 
     public void bind(Movie movie)
     {
-        String url = "http://image.tmdb.org/t/p/w185" + movie.getPoster_path();
+        String url = Util.getW154ImageUrl(movie.getPoster_path());
         Picasso.with(itemView.getContext()).load(url).into(mImageView);
 
         Log.d("kaushik", "url=" + url);
