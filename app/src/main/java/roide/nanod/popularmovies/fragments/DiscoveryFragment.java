@@ -4,7 +4,6 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -15,6 +14,8 @@ import android.widget.AdapterView;
 import android.widget.Spinner;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import retrofit.Callback;
@@ -33,9 +34,15 @@ import roide.nanod.popularmovies.ui.SwipeRefreshRecyclerView;
  */
 public class DiscoveryFragment extends BaseFragment
 {
+    private static final int SORT_MOST_POPULAR = 0;
+    private static final int SORT_HIGHEST_RATED = 1;
+
     private SwipeRefreshRecyclerView mSwipeRefreshRecyclerView;
     private RecyclerView mRecyclerView;
     private DiscoverAdapter mDiscoverAdapter;
+    private int mCurrentSortOrder = SORT_MOST_POPULAR;
+
+    private List<Movie> mMoviesList;
 
     private ArrayList<String> mSortMenuSpinnerList = new ArrayList<>();
     private Spinner.OnItemSelectedListener mSortItemSelectedListener = new AdapterView.OnItemSelectedListener()
@@ -43,13 +50,36 @@ public class DiscoveryFragment extends BaseFragment
         @Override
         public void onItemSelected(AdapterView<?> parent, View view, int position, long id)
         {
-            Log.d("kaushik", "onItemSelected::" + position);
+            if(position != mCurrentSortOrder && mMoviesList != null)
+            {
+                mCurrentSortOrder = position;
+                Collections.sort(mMoviesList, mMovieComparator);
+                mDiscoverAdapter.notifyDataSetChanged();
+            }
         }
 
         @Override
         public void onNothingSelected(AdapterView<?> parent)
         {
 
+        }
+    };
+
+    private Comparator<Movie> mMovieComparator = new Comparator<Movie>()
+    {
+        @Override
+        public int compare(Movie lhs, Movie rhs)
+        {
+            if(mCurrentSortOrder == SORT_MOST_POPULAR)
+            {
+                float diff = rhs.getPopularity()*100 - lhs.getPopularity()*100;
+                return (int)(diff);
+            }
+            else
+            {
+                float diff = rhs.getVote_average()*100 - lhs.getVote_average()*100;
+                return (int)(diff);
+            }
         }
     };
 
@@ -64,7 +94,6 @@ public class DiscoveryFragment extends BaseFragment
         mSortMenuSpinnerList.add("Most Popular");
         mSortMenuSpinnerList.add("Highest Rated");
         setHasOptionsMenu(true);
-        Log.d("DF", "onCreate");
     }
 
     @Nullable
@@ -77,13 +106,13 @@ public class DiscoveryFragment extends BaseFragment
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater)
     {
-        Log.d("DF", "onCreateOptionsMenu");
         // Inflate the menu; this adds items to the action bar if it is present.
         inflater.inflate(R.menu.menu_main_discovery, menu);
         MenuItem sortItem = menu.findItem(R.id.action_sorting);
         if(sortItem != null)
         {
-            SortMenuActionView actionMenuView = new SortMenuActionView(getContext(), mSortMenuSpinnerList);
+            SortMenuActionView actionMenuView = new SortMenuActionView(
+                    getActivity().getApplicationContext(), mSortMenuSpinnerList);
             sortItem.setActionView(actionMenuView);
             actionMenuView.getSpinner().setOnItemSelectedListener(mSortItemSelectedListener);
         }
@@ -116,7 +145,9 @@ public class DiscoveryFragment extends BaseFragment
                     @Override
                     public void success(List<Movie> movies, Response response)
                     {
-                        mDiscoverAdapter = new DiscoverAdapter(movies);
+                        mMoviesList = movies;
+                        Collections.sort(mMoviesList, mMovieComparator);
+                        mDiscoverAdapter = new DiscoverAdapter(mMoviesList);
                         mRecyclerView.addItemDecoration(new DiscoverItemDecor());
                         mRecyclerView.setAdapter(mDiscoverAdapter);
                     }
