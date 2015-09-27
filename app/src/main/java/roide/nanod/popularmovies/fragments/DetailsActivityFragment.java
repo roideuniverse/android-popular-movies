@@ -1,10 +1,12 @@
 package roide.nanod.popularmovies.fragments;
 
 import android.os.Bundle;
+import android.support.design.widget.AppBarLayout;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -18,7 +20,7 @@ import roide.nanod.popularmovies.util.Util;
 /**
  * A placeholder fragment containing a simple view.
  */
-public class DetailsActivityFragment extends BaseFragment
+public class DetailsActivityFragment extends BaseFragment implements AppBarLayout.OnOffsetChangedListener
 {
     private static final String ARG_MOVIE = "arg-movie";
 
@@ -33,11 +35,15 @@ public class DetailsActivityFragment extends BaseFragment
 
     private ImageView mIvHeaderImageView;
     private ImageView mIvDisplayPicture;
+    private ImageView mIvDisplayPictureHidden;
     private TextView mTvReleaseDate;
     private TextView mTvMovieRating;
     private TextView mTvMovieRatingUserCount;
     private TextView mTvMovieSummary;
+    private TextView mTvMovieName;
     private Toolbar mToolbar;
+    private AppBarLayout mAppBarLayout;
+    private FrameLayout mDPContainer;
 
     private Movie mMovie;
 
@@ -65,6 +71,11 @@ public class DetailsActivityFragment extends BaseFragment
         mIvHeaderImageView = (ImageView) rootView.findViewById(R.id.fragment_details_header);
         mToolbar = (Toolbar) rootView.findViewById(R.id.fragment_details_toolbar);
         mIvDisplayPicture = (ImageView) rootView.findViewById(R.id.fragment_details_display_pic);
+        mIvDisplayPictureHidden = (ImageView) rootView.findViewById(R.id.fragment_details_display_pic_hidden);
+        mDPContainer = (FrameLayout) rootView.findViewById(R.id.fragment_container_display_pic_container);
+        mTvMovieName = (TextView) rootView.findViewById(R.id.fragment_details_movie_name);
+        mAppBarLayout = (AppBarLayout) rootView.findViewById(R.id.appbar);
+        mAppBarLayout.addOnOffsetChangedListener(this);
     }
 
     @Override
@@ -87,7 +98,9 @@ public class DetailsActivityFragment extends BaseFragment
 
         String url2 = Util.getW154ImageUrl(mMovie.getPoster_path());
         Picasso.with(getContext()).load(url2).into(mIvDisplayPicture);
+        Picasso.with(getContext()).load(url2).into(mIvDisplayPictureHidden);
 
+        mTvMovieName.setText(mMovie.getOriginal_title());
         mTvReleaseDate.setText(mMovie.getRelease_date());
         mTvMovieRating.setText(String.valueOf(mMovie.getVote_average()));
         mTvMovieRatingUserCount.setText( String.valueOf(mMovie.getVote_count()) );
@@ -99,5 +112,13 @@ public class DetailsActivityFragment extends BaseFragment
     protected void loadData()
     {
 
+    }
+
+    @Override
+    public void onOffsetChanged(AppBarLayout appBarLayout, int vOffset)
+    {
+        float ratio = 1 - 2 * (float) Math.abs(vOffset)/mAppBarLayout.getHeight();
+        mDPContainer.setAlpha(ratio);
+        mIvDisplayPictureHidden.setAlpha(1 - ratio);
     }
 }
