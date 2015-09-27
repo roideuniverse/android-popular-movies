@@ -18,12 +18,12 @@
         <android.support.design.widget.CollapsingToolbarLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:contentScrim="#25000000"
+            app:contentScrim="@color/transparent_black_t25"
             app:layout_scrollFlags="scroll|exitUntilCollapsed"
             >
 
             <ImageView
-                android:id="@+id/details_header"
+                android:id="@+id/fragment_details_header"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:adjustViewBounds="true"
@@ -58,7 +58,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                android:layout_marginLeft="120dp"
+                android:layout_marginLeft="@dimen/fragment_details_rating_left_margin"
                 android:padding="@dimen/standard_margins"
                 >
 
@@ -72,7 +72,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Release Date"
+                        android:text="@string/fragment_details_release_date"
                         android:textStyle="bold"
                         />
 
@@ -84,6 +84,7 @@
                         />
 
                 </LinearLayout>
+
                 <LinearLayout
                     android:layout_width="0dip"
                     android:layout_height="wrap_content"
@@ -98,8 +99,8 @@
                         >
                         <ImageView
                             android:id="@+id/fragment_details_rating_image"
-                            android:layout_width="72dp"
-                            android:layout_height="72dp"
+                            android:layout_width="@dimen/fragment_details_rating_image_size"
+                            android:layout_height="@dimen/fragment_details_rating_image_size"
                             android:background="@drawable/circle_red"
                             android:layout_gravity="center"
                             />
@@ -108,9 +109,7 @@
                             android:id="@+id/fragment_details_rating_value"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:textColor="@android:color/white"
-                            android:textSize="18sp"
-                            android:textStyle="bold"
+                            style="@style/Text.Rating"
                             android:layout_gravity="center"
                             />
                     </FrameLayout>
@@ -123,20 +122,16 @@
                         >
 
                         <ImageView
-                            android:layout_width="16dp"
-                            android:layout_height="16dp"
+                            android:layout_width="@dimen/fragment_details_rating_image_group_size"
+                            android:layout_height="@dimen/fragment_details_rating_image_group_size"
                             android:src="@drawable/group_icon"
-                            android:layout_toLeftOf="@+id/fragment_details_rating_users_count"
-                            android:layout_centerVertical="true"
                             android:padding="2dp"
                             />
-
 
                         <TextView
                             android:id="@+id/fragment_details_rating_users_count"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_centerInParent="true"
                             android:textSize="14sp"
                             />
 
@@ -178,12 +173,12 @@
         app:layout_behavior="@string/appbar_scrolling_view_behavior"
         app:layout_anchor="@+id/appbar"
         app:layout_anchorGravity="bottom|left|start"
-        android:paddingTop="128dp"
+        android:paddingTop="@dimen/fragment_details_dp_container_top_pad"
         >
 
         <ImageView
             android:id="@+id/fragment_details_display_pic"
-            android:layout_width="@dimen/rounded_display_pic_size"
+            android:layout_width="@dimen/fragment_details_movie_display_pic_width"
             android:layout_height="wrap_content"
             android:adjustViewBounds="true"
             android:scaleType="centerCrop"

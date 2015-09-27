@@ -2,12 +2,9 @@ package roide.nanod.popularmovies.fragments;
 
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.ViewTreeObserver;
-import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -39,12 +36,9 @@ public class DetailsActivityFragment extends BaseFragment
     private TextView mTvMovieRating;
     private TextView mTvMovieRatingUserCount;
     private TextView mTvMovieSummary;
-    private FrameLayout mFlDisplayPicContainer;
     private Toolbar mToolbar;
 
     private Movie mMovie;
-
-    private int mPreviousHeight = 0;
 
     public DetailsActivityFragment()
     {
@@ -67,10 +61,9 @@ public class DetailsActivityFragment extends BaseFragment
         mTvReleaseDate = (TextView) rootView.findViewById(R.id.fragment_details_release_date);
         mTvMovieRatingUserCount = (TextView) rootView.findViewById(R.id.fragment_details_rating_users_count);
         mTvMovieSummary = (TextView) rootView.findViewById(R.id.fragment_details_movie_summary);
-        mIvHeaderImageView = (ImageView) rootView.findViewById(R.id.details_header);
+        mIvHeaderImageView = (ImageView) rootView.findViewById(R.id.fragment_details_header);
         mToolbar = (Toolbar) rootView.findViewById(R.id.fragment_details_toolbar);
         mIvDisplayPicture = (ImageView) rootView.findViewById(R.id.fragment_details_display_pic);
-        mFlDisplayPicContainer = (FrameLayout) rootView.findViewById(R.id.fragment_container_display_pic_container);
     }
 
     @Override
@@ -85,6 +78,7 @@ public class DetailsActivityFragment extends BaseFragment
         catch(ActivityClosingException e)
         {
             e.printStackTrace();
+            return;
         }
 
         String url = "http://image.tmdb.org/t/p/w500" + mMovie.getBackdrop_path();
