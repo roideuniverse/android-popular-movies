@@ -76,29 +76,6 @@ public class DetailsActivityFragment extends BaseFragment
     @Override
     protected void prepareViews()
     {
-        mIvDisplayPicture.getViewTreeObserver().addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener()
-        {
-            @Override
-            public boolean onPreDraw()
-            {
-                int height = mIvDisplayPicture.getHeight();
-                if(height != 0 && height > mPreviousHeight)
-                {
-                    Log.d(TAG, "height=" + height);
-                    //mIvDisplayPicture.getViewTreeObserver().removeOnPreDrawListener(this);
-
-                    mPreviousHeight = height;
-                    int pLeft = mFlDisplayPicContainer.getPaddingLeft();
-                    int pTop = mFlDisplayPicContainer.getPaddingTop() + (int)(height * 0.75);
-                    int pRight = mFlDisplayPicContainer.getPaddingRight();
-                    int pBottom = mFlDisplayPicContainer.getPaddingBottom();
-
-                    //mFlDisplayPicContainer.setPadding(pLeft, pTop, pRight, pBottom);
-                }
-                return true;
-            }
-        });
-
         try
         {
             getBaseActivity().setSupportActionBar(mToolbar);
