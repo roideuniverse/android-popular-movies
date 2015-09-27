@@ -45,7 +45,7 @@ public class DetailsActivity extends BaseActivity
         DetailsActivityFragment fragment = DetailsActivityFragment.newInstance(mMovie);
         getSupportFragmentManager()
                 .beginTransaction()
-                .replace(R.id.fragment_container, fragment)
+                .replace(R.id.activity_details_fragment_container, fragment)
                 .commit();
     }
 
