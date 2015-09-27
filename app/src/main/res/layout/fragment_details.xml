@@ -18,7 +18,7 @@
         <android.support.design.widget.CollapsingToolbarLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:contentScrim="@color/transparent_black_t25"
+            app:contentScrim="@color/transparent_black_t90"
             app:expandedTitleMarginBottom="96dp"
             app:collapsedTitleTextAppearance="@style/Text.CollapsedAppBarTitle"
             app:expandedTitleTextAppearance="@style/Text.ExpandedAppBarTitle"
@@ -184,10 +184,10 @@
 
             <View
                 android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:background="@android:color/black"
-                android:paddingLeft="@dimen/standard_margins"
-                android:paddingRight="@dimen/standard_margins"
+                android:layout_height="@dimen/sixteenth_margin"
+                android:background="@color/transparent_black_t90"
+                android:layout_marginLeft="@dimen/double_margins"
+                android:layout_marginRight="@dimen/double_margins"
                 />
 
             <LinearLayout
