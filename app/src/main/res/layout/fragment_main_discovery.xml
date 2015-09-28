@@ -5,7 +5,6 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     tools:context=".MainDiscoveryActivityFragment"
-    android:paddingTop="@dimen/half_margins"
     >
 
     <roide.nanod.popularmovies.ui.SwipeRefreshRecyclerView

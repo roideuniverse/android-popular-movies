@@ -2,6 +2,7 @@ package roide.nanod.popularmovies.fragments;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -43,6 +44,7 @@ public class DiscoveryFragment extends BaseFragment
     private int mCurrentSortOrder = SORT_MOST_POPULAR;
 
     private List<Movie> mMoviesList;
+    private int mPageNumber = 1;
 
     private ArrayList<String> mSortMenuSpinnerList = new ArrayList<>();
     private Spinner.OnItemSelectedListener mSortItemSelectedListener = new AdapterView.OnItemSelectedListener()
@@ -82,6 +84,21 @@ public class DiscoveryFragment extends BaseFragment
             }
         }
     };
+
+    private SwipeRefreshLayout.OnRefreshListener mSwipeRefreshListener =
+            new SwipeRefreshLayout.OnRefreshListener()
+    {
+        @Override
+        public void onRefresh()
+        {
+            mPageNumber = 1;
+            loadData();
+        }
+    };
+
+    //================================================ //
+    //================== Fragment ==================== //
+    //================================================ //
 
     public DiscoveryFragment()
     {
@@ -133,13 +150,23 @@ public class DiscoveryFragment extends BaseFragment
         mRecyclerView = mSwipeRefreshRecyclerView.getRecyclerView();
         mRecyclerView.setHasFixedSize(true);
         mRecyclerView.setLayoutManager(new GridLayoutManager(getContext(), 2));
+
+        mSwipeRefreshRecyclerView.setOnRefreshListener(mSwipeRefreshListener);
     }
 
     @Override
     protected void loadData()
     {
+        mSwipeRefreshRecyclerView.post(new Runnable()
+        {
+            @Override
+            public void run()
+            {
+                mSwipeRefreshRecyclerView.setRefreshing(true);
+            }
+        });
         DiscoverMoviesRequestBuilder.build(getContext())
-                .setPage(1)
+                .setPage(mPageNumber)
                 .setCallback(new Callback<List<Movie>>()
                 {
                     @Override
@@ -147,15 +174,22 @@ public class DiscoveryFragment extends BaseFragment
                     {
                         mMoviesList = movies;
                         Collections.sort(mMoviesList, mMovieComparator);
-                        mDiscoverAdapter = new DiscoverAdapter(mMoviesList);
-                        mRecyclerView.addItemDecoration(new DiscoverItemDecor());
-                        mRecyclerView.setAdapter(mDiscoverAdapter);
+                        if(mDiscoverAdapter == null)
+                        {
+                            mDiscoverAdapter = new DiscoverAdapter(mMoviesList);
+                            mRecyclerView.addItemDecoration(new DiscoverItemDecor());
+                            mRecyclerView.setAdapter(mDiscoverAdapter);
+                        } else
+                        {
+                            mDiscoverAdapter.notifyDataSetChanged();
+                        }
+                        mSwipeRefreshRecyclerView.setRefreshing(false);
                     }
 
                     @Override
                     public void failure(RetrofitError error)
                     {
-
+                        mSwipeRefreshRecyclerView.setRefreshing(false);
                     }
                 }).execute();
 
