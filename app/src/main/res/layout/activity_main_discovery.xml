@@ -1,8 +1,6 @@
-<fragment xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
           xmlns:tools="http://schemas.android.com/tools"
-          android:id="@+id/fragment"
-          android:name="roide.nanod.popularmovies.fragments.DiscoveryFragment"
-          tools:layout="@layout/fragment_main_discovery"
+          android:id="@+id/activity_main_frag_container"
           android:layout_width="match_parent"
           android:layout_height="match_parent"
     />

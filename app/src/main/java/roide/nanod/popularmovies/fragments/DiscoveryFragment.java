@@ -5,6 +5,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -38,6 +39,7 @@ import roide.nanod.popularmovies.ui.WidgetLoadMore;
 public class DiscoveryFragment extends BaseFragment
 {
 
+    private static final String SORT_ORDER = "sort-order";
     private SwipeRefreshRecyclerView mSwipeRefreshRecyclerView;
     private RecyclerView mRecyclerView;
     private BaseAdapter mBaseAdapter;
@@ -138,6 +140,15 @@ public class DiscoveryFragment extends BaseFragment
         return MovieAPI.SortOrder.HIGHEST_RATED;
     }
 
+    public int getPositionForSortOrder(MovieAPI.SortOrder sortOrder)
+    {
+        if(sortOrder == MovieAPI.SortOrder.MOST_POPULAR)
+        {
+            return 0;
+        }
+        return 1;
+    }
+
     //================================================ //
     //================== Fragment ==================== //
     //================================================ //
@@ -160,6 +171,24 @@ public class DiscoveryFragment extends BaseFragment
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
     {
         return inflater.inflate(R.layout.fragment_main_discovery, container, false);
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState)
+    {
+        super.onSaveInstanceState(outState);
+        outState.putInt(SORT_ORDER, getPositionForSortOrder(mCurrentSortOrder));
+
+    }
+
+    @Override
+    public void onViewStateRestored(@Nullable Bundle savedInstanceState)
+    {
+        if(savedInstanceState != null)
+        {
+            mCurrentSortOrder = getSortOrder(savedInstanceState.getInt(SORT_ORDER));
+        }
+        super.onViewStateRestored(savedInstanceState);
     }
 
     @Override

@@ -42,6 +42,11 @@ public class DetailsActivity extends BaseActivity
         prepareActionBar();
         readIntent();
 
+        if(savedInstanceState != null)
+        {
+            return;
+        }
+
         DetailsActivityFragment fragment = DetailsActivityFragment.newInstance(mMovie);
         getSupportFragmentManager()
                 .beginTransaction()
