@@ -35,5 +35,13 @@ public class DiscoverItemDecor extends RecyclerView.ItemDecoration
         {
             outRect.left = outRect.left / 2;
         }
+
+        /**
+         * For the top row
+         */
+        if(position == 0 || position == 1)
+        {
+            outRect.top = resources.getDimensionPixelSize(R.dimen.half_margins);
+        }
     }
 }
