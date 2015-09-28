@@ -53,6 +53,12 @@ public abstract class BaseFragment extends Fragment
         super.onViewCreated(view, savedInstanceState);
         findRequiredViews(view);
         prepareViews();
+    }
+
+    @Override
+    public void onViewStateRestored(@Nullable Bundle savedInstanceState)
+    {
+        super.onViewStateRestored(savedInstanceState);
         loadData();
     }
 

@@ -12,6 +12,7 @@ import android.widget.Spinner;
 import java.util.ArrayList;
 
 import roide.nanod.popularmovies.R;
+import roide.nanod.popularmovies.fragments.DiscoveryFragment;
 import roide.nanod.popularmovies.ui.SortMenuActionView;
 
 public class DiscoveryActivity extends BaseActivity
@@ -21,6 +22,13 @@ public class DiscoveryActivity extends BaseActivity
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_discovery);
+        if(savedInstanceState == null)
+        {
+            getSupportFragmentManager()
+                    .beginTransaction()
+                    .replace(R.id.activity_main_frag_container, new DiscoveryFragment())
+                    .commit();
+        }
     }
 
     @Override

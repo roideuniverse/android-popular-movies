@@ -9,21 +9,23 @@ import com.squareup.picasso.Picasso;
 import roide.nanod.popularmovies.R;
 import roide.nanod.popularmovies.activites.DetailsActivity;
 import roide.nanod.popularmovies.network.models.Movie;
+import roide.nanod.popularmovies.recyclerview.base.BaseViewHolder;
 import roide.nanod.popularmovies.util.Util;
 
 /**
  * Created by kaushiksaurabh on 9/12/15.
  */
-public class DiscoverMovieViewHolder extends RecyclerView.ViewHolder
+public class DiscoverViewHolder extends BaseViewHolder<Movie>
 {
     private ImageView mImageView;
 
-    public DiscoverMovieViewHolder(View itemView)
+    public DiscoverViewHolder(View itemView)
     {
         super(itemView);
         mImageView = (ImageView) itemView.findViewById(R.id.element_discover_grid_image);
     }
 
+    @Override
     public void bind(Movie movie)
     {
         String url = Util.getW154ImageUrl(movie.getPoster_path());
