@@ -3,6 +3,7 @@ package roide.nanod.popularmovies.fragments;
 import android.os.Bundle;
 import android.support.design.widget.AppBarLayout;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -95,6 +96,7 @@ public class DetailsActivityFragment extends BaseFragment implements AppBarLayou
 
         String url = Util.getW500ImageUrl(mMovie.getBackdrop_path());
         Picasso.with(getContext()).load(url).into(mIvHeaderImageView);
+        Log.d("kaushik", "backDropUrl=" + url);
 
         String url2 = Util.getW154ImageUrl(mMovie.getPoster_path());
         Picasso.with(getContext()).load(url2).into(mIvDisplayPicture);

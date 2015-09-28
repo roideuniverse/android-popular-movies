@@ -6,4 +6,6 @@
     <string name="fragment_details_release_date">Release Date</string>
 
     <string name="transition_movie_display_image">transition_display_image</string>
+
+    <string name="load_more">Load More</string>
 </resources>
