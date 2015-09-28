@@ -5,7 +5,6 @@ import android.support.annotation.Nullable;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -17,8 +16,6 @@ import android.widget.Spinner;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 
 import retrofit.Callback;
@@ -111,7 +108,6 @@ public class DiscoveryFragment extends BaseFragment
         @Override
         public int getSpanSize(int position)
         {
-            Log.d("kaushik", "position=" + position + "::mMovieSize=" + mMoviesList.size());
             if(position >= mMoviesList.size())
             {
                 return 2;
