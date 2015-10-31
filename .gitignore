@@ -36,6 +36,7 @@ proguard/
 
 #iml files
 *.iml
+*.directory
 
 #idea folder
 .idea/
