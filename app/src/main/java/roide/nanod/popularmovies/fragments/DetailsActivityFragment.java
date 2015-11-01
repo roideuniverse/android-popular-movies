@@ -12,6 +12,8 @@ import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 
+import butterknife.Bind;
+import butterknife.ButterKnife;
 import roide.nanod.popularmovies.R;
 import roide.nanod.popularmovies.exceptions.ActivityClosingException;
 import roide.nanod.popularmovies.network.models.Movie;
@@ -33,17 +35,17 @@ public class DetailsActivityFragment extends BaseFragment implements AppBarLayou
         return fragment;
     }
 
-    private ImageView mIvHeaderImageView;
-    private ImageView mIvDisplayPicture;
-    private ImageView mIvDisplayPictureHidden;
-    private TextView mTvReleaseDate;
-    private TextView mTvMovieRating;
-    private TextView mTvMovieRatingUserCount;
-    private TextView mTvMovieSummary;
-    private TextView mTvMovieName;
-    private Toolbar mToolbar;
-    private AppBarLayout mAppBarLayout;
-    private FrameLayout mDPContainer;
+    @Bind(R.id.fragment_details_header) ImageView mIvHeaderImageView;
+    @Bind(R.id.fragment_details_display_pic) ImageView mIvDisplayPicture;
+    @Bind(R.id.fragment_details_display_pic_hidden) ImageView mIvDisplayPictureHidden;
+    @Bind(R.id.fragment_details_release_date) TextView mTvReleaseDate;
+    @Bind(R.id.fragment_details_rating_value) TextView mTvMovieRating;
+    @Bind(R.id.fragment_details_rating_users_count) TextView mTvMovieRatingUserCount;
+    @Bind(R.id.fragment_details_movie_summary) TextView mTvMovieSummary;
+    @Bind(R.id.fragment_details_movie_name) TextView mTvMovieName;
+    @Bind(R.id.fragment_details_toolbar) Toolbar mToolbar;
+    @Bind(R.id.appbar) AppBarLayout mAppBarLayout;
+    @Bind(R.id.fragment_container_display_pic_container) FrameLayout mDPContainer;
 
     private Movie mMovie;
 
@@ -64,17 +66,7 @@ public class DetailsActivityFragment extends BaseFragment implements AppBarLayou
     @Override
     protected void findRequiredViews(View rootView)
     {
-        mTvMovieRating = (TextView) rootView.findViewById(R.id.fragment_details_rating_value);
-        mTvReleaseDate = (TextView) rootView.findViewById(R.id.fragment_details_release_date);
-        mTvMovieRatingUserCount = (TextView) rootView.findViewById(R.id.fragment_details_rating_users_count);
-        mTvMovieSummary = (TextView) rootView.findViewById(R.id.fragment_details_movie_summary);
-        mIvHeaderImageView = (ImageView) rootView.findViewById(R.id.fragment_details_header);
-        mToolbar = (Toolbar) rootView.findViewById(R.id.fragment_details_toolbar);
-        mIvDisplayPicture = (ImageView) rootView.findViewById(R.id.fragment_details_display_pic);
-        mIvDisplayPictureHidden = (ImageView) rootView.findViewById(R.id.fragment_details_display_pic_hidden);
-        mDPContainer = (FrameLayout) rootView.findViewById(R.id.fragment_container_display_pic_container);
-        mTvMovieName = (TextView) rootView.findViewById(R.id.fragment_details_movie_name);
-        mAppBarLayout = (AppBarLayout) rootView.findViewById(R.id.appbar);
+        ButterKnife.bind(this, rootView);
         mAppBarLayout.addOnOffsetChangedListener(this);
     }
 
