@@ -24,6 +24,13 @@
             android:theme="@style/AppTheme.NoActionBar"
             >
         </activity>
+
+        <!-- Local Database Provider -->
+        <provider
+            android:name=".database.FavoriteMovieContentProvider"
+            android:authorities="roide.nanod.popularmovies.provider"
+            android:exported="false"
+            />
     </application>
 
 </manifest>

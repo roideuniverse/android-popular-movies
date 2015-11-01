@@ -23,6 +23,7 @@ public class Movie implements Parcelable
     private String poster_path;
     private boolean video;
     private int vote_count;
+    private boolean mIsFavorite;
 
     public Movie() {}
 
@@ -76,6 +77,16 @@ public class Movie implements Parcelable
         return vote_count;
     }
 
+    public boolean getIsFavorite()
+    {
+        return mIsFavorite;
+    }
+
+    public void setIsFavorite(boolean isFavorite)
+    {
+        mIsFavorite = isFavorite;
+    }
+
     @Override
     public int describeContents()
     {
@@ -97,6 +108,8 @@ public class Movie implements Parcelable
 
         destination.writeFloat(popularity);
         destination.writeFloat(vote_average);
+
+        destination.writeInt(mIsFavorite==true ? 1: 0);
     }
 
     public static final Parcelable.Creator<Movie> CREATOR = new Parcelable.Creator<Movie>()
@@ -126,6 +139,8 @@ public class Movie implements Parcelable
 
         popularity = source.readFloat();
         vote_average = source.readFloat();
+
+        mIsFavorite = source.readInt()==1 ? true : false;
     }
 
 }
