@@ -23,10 +23,9 @@ public class FavoriteMovieContentProvider extends ContentProvider {
     private static final UriMatcher mUriMatcher;
     private FavoriteDbHelper mDbHelper;
 
-    public static final Uri CONTENT_URI_SHOW = Uri.parse("content://" + AUTHORITY + "/" + PATH_MOVIES);
+    public static final Uri CONTENT_URI_MOVIES = Uri.parse("content://" + AUTHORITY + "/" + PATH_MOVIES);
 
-    static
-    {
+    static {
         mUriMatcher = new UriMatcher(UriMatcher.NO_MATCH);
         mUriMatcher.addURI(AUTHORITY, PATH_MOVIES, MOVIES);
     }
@@ -41,8 +40,7 @@ public class FavoriteMovieContentProvider extends ContentProvider {
     @Override
     public Cursor query(Uri uri, String[] projection, String selection, String[] selectionArgs, String sortOrder) {
         SQLiteQueryBuilder queryBuilder = new SQLiteQueryBuilder();
-        switch(mUriMatcher.match(uri))
-        {
+        switch (mUriMatcher.match(uri)) {
             case MOVIES:
                 queryBuilder.setTables(FavoriteDbContract.TABLE_NAME);
                 break;
@@ -72,8 +70,7 @@ public class FavoriteMovieContentProvider extends ContentProvider {
         SQLiteDatabase database = mDbHelper.getWritableDatabase();
         int conflictAlgorithm = SQLiteDatabase.CONFLICT_REPLACE;
 
-        switch(mUriMatcher.match(uri))
-        {
+        switch (mUriMatcher.match(uri)) {
             case MOVIES:
                 id = database.insertWithOnConflict(FavoriteDbContract.TABLE_NAME,
                     nullColumnHack, values, conflictAlgorithm);
@@ -96,8 +93,7 @@ public class FavoriteMovieContentProvider extends ContentProvider {
         String id = uri.getLastPathSegment();
         SQLiteDatabase database = mDbHelper.getWritableDatabase();
 
-        switch(mUriMatcher.match(uri))
-        {
+        switch (mUriMatcher.match(uri)) {
             case MOVIES:
                 database.delete(FavoriteDbContract.TABLE_NAME, selection, selectionArgs);
                 break;
@@ -114,8 +110,7 @@ public class FavoriteMovieContentProvider extends ContentProvider {
     public int update(Uri uri, ContentValues values, String selection, String[] selectionArgs) {
         int rowsUpdated = 0;
         SQLiteDatabase database = mDbHelper.getWritableDatabase();
-        switch(mUriMatcher.match(uri))
-        {
+        switch (mUriMatcher.match(uri)) {
             case MOVIES:
                 rowsUpdated = database.update(FavoriteDbContract.TABLE_NAME,
                     values,
