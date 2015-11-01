@@ -17,7 +17,7 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import roide.nanod.popularmovies.R;
-import roide.nanod.popularmovies.database.FavoriteDbUtil;
+import roide.nanod.popularmovies.util.FavoriteDbUtil;
 import roide.nanod.popularmovies.exceptions.ActivityClosingException;
 import roide.nanod.popularmovies.network.models.Movie;
 import roide.nanod.popularmovies.util.Util;

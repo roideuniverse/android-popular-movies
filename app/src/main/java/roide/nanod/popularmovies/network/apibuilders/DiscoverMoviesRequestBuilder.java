@@ -11,6 +11,7 @@ import roide.nanod.popularmovies.network.MovieAPI;
 import roide.nanod.popularmovies.network.MoviesRequestBuilder;
 import roide.nanod.popularmovies.network.models.Movie;
 import roide.nanod.popularmovies.network.responses.DiscoverMoviesResponse;
+import roide.nanod.popularmovies.util.SortOrder;
 
 /**
  * Created by roide on 9/9/15.
@@ -18,7 +19,7 @@ import roide.nanod.popularmovies.network.responses.DiscoverMoviesResponse;
 public class DiscoverMoviesRequestBuilder extends BaseApiBuilder
 {
     private int mPageNo = 1;
-    private MovieAPI.SortOrder mSortOrder = MovieAPI.SortOrder.MOST_POPULAR;
+    private SortOrder mSortOrder = SortOrder.MOST_POPULAR;
     private Callback<List<Movie>> mRetrofitCallback;
 
     public static DiscoverMoviesRequestBuilder build(Context context)
@@ -37,7 +38,7 @@ public class DiscoverMoviesRequestBuilder extends BaseApiBuilder
         return this;
     }
 
-    public DiscoverMoviesRequestBuilder setSortOrder(MovieAPI.SortOrder sortOrder)
+    public DiscoverMoviesRequestBuilder setSortOrder(SortOrder sortOrder)
     {
         mSortOrder = sortOrder;
         return this;

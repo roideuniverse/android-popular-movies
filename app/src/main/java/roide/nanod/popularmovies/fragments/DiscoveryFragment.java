@@ -32,6 +32,7 @@ import roide.nanod.popularmovies.recyclerview.base.OnLoadMoreListener;
 import roide.nanod.popularmovies.ui.SortMenuActionView;
 import roide.nanod.popularmovies.ui.SwipeRefreshRecyclerView;
 import roide.nanod.popularmovies.ui.WidgetLoadMore;
+import roide.nanod.popularmovies.util.SortOrder;
 
 /**
  * A placeholder fragment containing a simple view.
@@ -43,7 +44,7 @@ public class DiscoveryFragment extends BaseFragment
     private SwipeRefreshRecyclerView mSwipeRefreshRecyclerView;
     private RecyclerView mRecyclerView;
     private BaseAdapter mBaseAdapter;
-    private MovieAPI.SortOrder mCurrentSortOrder = MovieAPI.SortOrder.MOST_POPULAR;
+    private SortOrder mCurrentSortOrder = SortOrder.MOST_POPULAR;
 
     private List<Movie> mMoviesList;
     private int mPageNumber = 1;
@@ -70,25 +71,6 @@ public class DiscoveryFragment extends BaseFragment
 
         }
     };
-/*
-    private Comparator<Movie> mMovieComparator = new Comparator<Movie>()
-    {
-        @Override
-        public int compare(Movie lhs, Movie rhs)
-        {
-            if(mCurrentSortOrder == MovieAPI.SortOrder.MOST_POPULAR)
-            {
-                float diff = rhs.getPopularity()*100 - lhs.getPopularity()*100;
-                return (int)(diff);
-            }
-            else
-            {
-                float diff = rhs.getVote_average()*100 - lhs.getVote_average()*100;
-                return (int)(diff);
-            }
-        }
-    };
-    */
 
     private SwipeRefreshLayout.OnRefreshListener mSwipeRefreshListener =
             new SwipeRefreshLayout.OnRefreshListener()
@@ -131,22 +113,31 @@ public class DiscoveryFragment extends BaseFragment
         }
     };
 
-    public MovieAPI.SortOrder getSortOrder(int position)
+    public SortOrder getSortOrder(int position)
     {
         if(position == 0)
         {
-            return MovieAPI.SortOrder.MOST_POPULAR;
+            return SortOrder.MOST_POPULAR;
         }
-        return MovieAPI.SortOrder.HIGHEST_RATED;
+        else if(position == 1)
+        {
+            return SortOrder.HIGHEST_RATED;
+        }
+
+        return SortOrder.FAVORITE;
     }
 
-    public int getPositionForSortOrder(MovieAPI.SortOrder sortOrder)
+    public int getPositionForSortOrder(SortOrder sortOrder)
     {
-        if(sortOrder == MovieAPI.SortOrder.MOST_POPULAR)
+        if(sortOrder == SortOrder.MOST_POPULAR)
         {
             return 0;
         }
-        return 1;
+        else if(sortOrder == SortOrder.HIGHEST_RATED)
+        {
+            return 1;
+        }
+        return 2;
     }
 
     //================================================ //
@@ -163,6 +154,7 @@ public class DiscoveryFragment extends BaseFragment
         super.onCreate(savedInstanceState);
         mSortMenuSpinnerList.add("Most Popular");
         mSortMenuSpinnerList.add("Highest Rated");
+        mSortMenuSpinnerList.add("Favorite");
         setHasOptionsMenu(true);
     }
 
@@ -230,15 +222,20 @@ public class DiscoveryFragment extends BaseFragment
     @Override
     protected void loadData()
     {
-        mSwipeRefreshRecyclerView.post(new Runnable()
-        {
+        mSwipeRefreshRecyclerView.post(new Runnable() {
             @Override
-            public void run()
-            {
+            public void run() {
                 mSwipeRefreshRecyclerView.setRefreshing(true);
             }
         });
-        DiscoverMoviesRequestBuilder.build(getContext())
+
+        if(mCurrentSortOrder == SortOrder.FAVORITE)
+        {
+
+        }
+        else
+        {
+            DiscoverMoviesRequestBuilder.build(getContext())
                 .setPage(mPageNumber)
                 .setSortOrder(mCurrentSortOrder)
                 .setCallback(new Callback<List<Movie>>()
@@ -295,7 +292,7 @@ public class DiscoveryFragment extends BaseFragment
                         }
                     }
                 }).execute();
-
+        }
     }
 
     private void addAll(List<Movie> movieList)

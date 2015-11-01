@@ -1,9 +1,12 @@
-package roide.nanod.popularmovies.database;
+package roide.nanod.popularmovies.util;
 
 import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
+
+import roide.nanod.popularmovies.database.FavoriteDbContract;
+import roide.nanod.popularmovies.database.FavoriteMovieContentProvider;
 import roide.nanod.popularmovies.network.models.Movie;
 
 /**
