@@ -2,6 +2,7 @@ package roide.nanod.popularmovies.fragments;
 
 import android.os.Bundle;
 import android.support.design.widget.AppBarLayout;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,7 +15,9 @@ import com.squareup.picasso.Picasso;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import roide.nanod.popularmovies.R;
+import roide.nanod.popularmovies.database.FavoriteDbUtil;
 import roide.nanod.popularmovies.exceptions.ActivityClosingException;
 import roide.nanod.popularmovies.network.models.Movie;
 import roide.nanod.popularmovies.util.Util;
@@ -45,6 +48,7 @@ public class DetailsActivityFragment extends BaseFragment implements AppBarLayou
     @Bind(R.id.fragment_details_movie_name) TextView mTvMovieName;
     @Bind(R.id.fragment_details_toolbar) Toolbar mToolbar;
     @Bind(R.id.appbar) AppBarLayout mAppBarLayout;
+    @Bind(R.id.fragment_details_fab) FloatingActionButton mFloatingActionButton;
     @Bind(R.id.fragment_container_display_pic_container) FrameLayout mDPContainer;
 
     private Movie mMovie;
@@ -78,6 +82,8 @@ public class DetailsActivityFragment extends BaseFragment implements AppBarLayou
             getBaseActivity().setSupportActionBar(mToolbar);
             getBaseActivity().getSupportActionBar().setDisplayHomeAsUpEnabled(true);
             getBaseActivity().setTitle(mMovie.getTitle());
+            mMovie.setIsFavorite(FavoriteDbUtil.isFavorite(mMovie, getContext()));
+            refreshFabUI();
         }
         catch(ActivityClosingException e)
         {
@@ -95,7 +101,7 @@ public class DetailsActivityFragment extends BaseFragment implements AppBarLayou
         mTvMovieName.setText(mMovie.getOriginal_title());
         mTvReleaseDate.setText(mMovie.getRelease_date());
         mTvMovieRating.setText(String.valueOf(mMovie.getVote_average()));
-        mTvMovieRatingUserCount.setText( String.valueOf(mMovie.getVote_count()) );
+        mTvMovieRatingUserCount.setText(String.valueOf(mMovie.getVote_count()));
         mTvMovieSummary.setText(mMovie.getOverview());
 
     }
@@ -112,5 +118,33 @@ public class DetailsActivityFragment extends BaseFragment implements AppBarLayou
         float ratio = 1 - 2 * (float) Math.abs(vOffset)/mAppBarLayout.getHeight();
         mDPContainer.setAlpha(ratio);
         mIvDisplayPictureHidden.setAlpha(1 - ratio);
+    }
+
+    @OnClick(R.id.fragment_details_fab)
+    public void onFabClicked(View view)
+    {
+        if(mMovie.getIsFavorite())
+        {
+            FavoriteDbUtil.doFavorite(mMovie, false, getContext());
+            mMovie.setIsFavorite(false);
+        }
+        else
+        {
+            FavoriteDbUtil.doFavorite(mMovie, true, getContext());
+            mMovie.setIsFavorite(true);
+        }
+        refreshFabUI();
+    }
+
+    private void refreshFabUI()
+    {
+        if(mMovie.getIsFavorite())
+        {
+            mFloatingActionButton.setImageResource(R.drawable.ic_favorite_true);
+        }
+        else
+        {
+            mFloatingActionButton.setImageResource(R.drawable.ic_favorite_false);
+        }
     }
 }
