@@ -4,8 +4,6 @@ import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
-import android.util.Log;
-
 import roide.nanod.popularmovies.network.models.Movie;
 
 /**
@@ -57,7 +55,6 @@ public class FavoriteDbUtil {
                 String id = cursor.getString(cursor.getColumnIndex(FavoriteDbContract.Entry.MOV_ID));
                 isFavorite = cursor.getInt(cursor.getColumnIndex(FavoriteDbContract.Entry.MOV_IS_FAVORITE));
                 String movieName = cursor.getString(cursor.getColumnIndex(FavoriteDbContract.Entry.MOV_NAME));
-                Log.d("kaushik", "id=" + id + "::isFav=" + isFavorite + "::movieName=" + movieName);
             }
             cursor.close();
         }
