@@ -5,7 +5,6 @@ import android.support.annotation.Nullable;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -23,7 +22,6 @@ import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 import roide.nanod.popularmovies.R;
-import roide.nanod.popularmovies.network.MovieAPI;
 import roide.nanod.popularmovies.network.apibuilders.DiscoverMoviesRequestBuilder;
 import roide.nanod.popularmovies.network.models.Movie;
 import roide.nanod.popularmovies.recyclerview.base.BaseAdapter;
@@ -32,6 +30,7 @@ import roide.nanod.popularmovies.recyclerview.base.OnLoadMoreListener;
 import roide.nanod.popularmovies.ui.SortMenuActionView;
 import roide.nanod.popularmovies.ui.SwipeRefreshRecyclerView;
 import roide.nanod.popularmovies.ui.WidgetLoadMore;
+import roide.nanod.popularmovies.util.FavoriteDbUtil;
 import roide.nanod.popularmovies.util.SortOrder;
 
 /**
@@ -222,19 +221,26 @@ public class DiscoveryFragment extends BaseFragment
     @Override
     protected void loadData()
     {
-        mSwipeRefreshRecyclerView.post(new Runnable() {
-            @Override
-            public void run() {
-                mSwipeRefreshRecyclerView.setRefreshing(true);
-            }
-        });
-
         if(mCurrentSortOrder == SortOrder.FAVORITE)
         {
-
+            if(mMoviesList != null)
+            {
+                mMoviesList.clear();
+            }
+            mBaseAdapter.enableLoadMore(false);
+            mSwipeRefreshRecyclerView.setEnabled(false);
+            addAll(FavoriteDbUtil.getAllFavoriteList(getContext()));
+            mBaseAdapter.notifyDataSetChanged();
         }
         else
         {
+            mSwipeRefreshRecyclerView.post(new Runnable() {
+                @Override
+                public void run() {
+                    mSwipeRefreshRecyclerView.setEnabled(true);
+                    mSwipeRefreshRecyclerView.setRefreshing(true);
+                }
+            });
             DiscoverMoviesRequestBuilder.build(getContext())
                 .setPage(mPageNumber)
                 .setSortOrder(mCurrentSortOrder)
@@ -243,7 +249,6 @@ public class DiscoveryFragment extends BaseFragment
                     @Override
                     public void success(List<Movie> movies, Response response)
                     {
-
                         mSwipeRefreshRecyclerView.setRefreshing(false);
                         if(mLoadingMore == true)
                         {
@@ -255,7 +260,8 @@ public class DiscoveryFragment extends BaseFragment
                             }
                             addAll(movies);
                             mBaseAdapter.notifyDataSetChanged();
-                        } else
+                        }
+                        else
                         {
                             if(mMoviesList != null)
                             {
@@ -274,6 +280,7 @@ public class DiscoveryFragment extends BaseFragment
                                 mBaseAdapter.notifyDataSetChanged();
                             }
                         }
+                        mBaseAdapter.enableLoadMore(true);
                     }
 
                     @Override

@@ -123,16 +123,8 @@ public class DetailsActivityFragment extends BaseFragment implements AppBarLayou
     @OnClick(R.id.fragment_details_fab)
     public void onFabClicked(View view)
     {
-        if(mMovie.getIsFavorite())
-        {
-            FavoriteDbUtil.doFavorite(mMovie, false, getContext());
-            mMovie.setIsFavorite(false);
-        }
-        else
-        {
-            FavoriteDbUtil.doFavorite(mMovie, true, getContext());
-            mMovie.setIsFavorite(true);
-        }
+        mMovie.setIsFavorite(!mMovie.getIsFavorite());
+        FavoriteDbUtil.saveMovie(mMovie, getContext());
         refreshFabUI();
     }
 

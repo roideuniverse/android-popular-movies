@@ -6,8 +6,7 @@ import android.os.Parcelable;
 /**
  * Created by roide on 9/8/15.
  */
-public class Movie implements Parcelable
-{
+public class Movie implements Parcelable {
     private int id;
     private String original_title;
     private String overview;
@@ -16,86 +15,69 @@ public class Movie implements Parcelable
     private String title;
     private float vote_average;
 
-    private boolean adult;
     private String backdrop_path;
-    private int[] genre_ids;
-    private String original_language;
     private String poster_path;
-    private boolean video;
     private int vote_count;
     private boolean mIsFavorite;
 
-    public Movie() {}
+    public Movie() {
+    }
 
-    public int getId()
-    {
+    public int getId() {
         return id;
     }
 
-    public String getOriginal_title()
-    {
+    public String getOriginal_title() {
         return original_title;
     }
 
-    public String getOverview()
-    {
+    public String getOverview() {
         return overview;
     }
 
-    public String getRelease_date()
-    {
+    public String getRelease_date() {
         return release_date;
     }
 
-    public float getPopularity()
-    {
+    public float getPopularity() {
         return popularity;
     }
 
-    public String getTitle()
-    {
+    public String getTitle() {
         return title;
     }
 
-    public float getVote_average()
-    {
+    public float getVote_average() {
         return vote_average;
     }
 
-    public String getPoster_path()
-    {
+    public String getPoster_path() {
         return poster_path;
     }
 
-    public String getBackdrop_path()
-    {
+    public String getBackdrop_path() {
         return backdrop_path;
     }
 
-    public int getVote_count()
-    {
+    public int getVote_count() {
         return vote_count;
     }
 
-    public boolean getIsFavorite()
-    {
+    public void setIsFavorite(boolean isFavorite) {
+        this.mIsFavorite = isFavorite;
+    }
+
+    public boolean getIsFavorite() {
         return mIsFavorite;
     }
 
-    public void setIsFavorite(boolean isFavorite)
-    {
-        mIsFavorite = isFavorite;
-    }
-
     @Override
-    public int describeContents()
-    {
+    public int describeContents() {
         return 0;
     }
 
     @Override
-    public void writeToParcel(Parcel destination, int flags)
-    {
+    public void writeToParcel(Parcel destination, int flags) {
         destination.writeInt(id);
         destination.writeString(original_title);
         destination.writeString(overview);
@@ -109,24 +91,20 @@ public class Movie implements Parcelable
         destination.writeFloat(popularity);
         destination.writeFloat(vote_average);
 
-        destination.writeInt(mIsFavorite==true ? 1: 0);
+        destination.writeInt(mIsFavorite == true ? 1 : 0);
     }
 
-    public static final Parcelable.Creator<Movie> CREATOR = new Parcelable.Creator<Movie>()
-    {
-        public Movie createFromParcel(Parcel in)
-        {
+    public static final Parcelable.Creator<Movie> CREATOR = new Parcelable.Creator<Movie>() {
+        public Movie createFromParcel(Parcel in) {
             return new Movie(in);
         }
 
-        public Movie[] newArray(int size)
-        {
+        public Movie[] newArray(int size) {
             return new Movie[size];
         }
     };
 
-    private Movie(Parcel source)
-    {
+    private Movie(Parcel source) {
         id = source.readInt();
         original_title = source.readString();
         overview = source.readString();
@@ -140,7 +118,46 @@ public class Movie implements Parcelable
         popularity = source.readFloat();
         vote_average = source.readFloat();
 
-        mIsFavorite = source.readInt()==1 ? true : false;
+        mIsFavorite = source.readInt() == 1 ? true : false;
     }
 
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public void setOriginal_title(String original_title) {
+        this.original_title = original_title;
+    }
+
+    public void setOverview(String overview) {
+        this.overview = overview;
+    }
+
+    public void setRelease_date(String release_date) {
+        this.release_date = release_date;
+    }
+
+    public void setPopularity(float popularity) {
+        this.popularity = popularity;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public void setVote_average(float vote_average) {
+        this.vote_average = vote_average;
+    }
+
+    public void setBackdrop_path(String backdrop_path) {
+        this.backdrop_path = backdrop_path;
+    }
+
+    public void setPoster_path(String poster_path) {
+        this.poster_path = poster_path;
+    }
+
+    public void setVote_count(int vote_count) {
+        this.vote_count = vote_count;
+    }
 }
