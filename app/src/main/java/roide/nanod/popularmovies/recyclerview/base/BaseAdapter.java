@@ -21,6 +21,7 @@ public class BaseAdapter extends RecyclerView.Adapter<BaseViewHolder>
     private List<Movie> mMovieList;
     private WidgetLoadMore mWidgetLoadMore;
     private OnLoadMoreListener mLoadMoreListener;
+    private boolean mLoadMoreEnabled;
 
     public BaseAdapter(List<Movie> movies)
     {
@@ -36,7 +37,7 @@ public class BaseAdapter extends RecyclerView.Adapter<BaseViewHolder>
                     viewGroup, false);
             return new DiscoverViewHolder(root);
         }
-        else if(viewType == VIEW_FOOTER)
+        else if(viewType == VIEW_FOOTER && mLoadMoreEnabled)
         {
             mWidgetLoadMore = new WidgetLoadMore(viewGroup.getContext());
             return new LoadMoreViewHolder(mWidgetLoadMore);
@@ -61,7 +62,14 @@ public class BaseAdapter extends RecyclerView.Adapter<BaseViewHolder>
     @Override
     public int getItemCount()
     {
-        return mMovieList.size() + 1;
+        if(mLoadMoreEnabled)
+        {
+            return mMovieList.size() + 1;
+        }
+        else
+        {
+            return mMovieList.size();
+        }
     }
 
     @Override
@@ -77,5 +85,10 @@ public class BaseAdapter extends RecyclerView.Adapter<BaseViewHolder>
     public void setOnLoadMoreListener(OnLoadMoreListener onLoadMoreListener)
     {
         mLoadMoreListener = onLoadMoreListener;
+    }
+
+    public void enableLoadMore(boolean enable)
+    {
+        mLoadMoreEnabled = enable;
     }
 }

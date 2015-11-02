@@ -1,11 +1,15 @@
 package roide.nanod.popularmovies.fragments;
 
+import android.content.ContentResolver;
+import android.database.Cursor;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.app.LoaderManager;
+import android.support.v4.content.CursorLoader;
+import android.support.v4.content.Loader;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -23,7 +27,8 @@ import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 import roide.nanod.popularmovies.R;
-import roide.nanod.popularmovies.network.MovieAPI;
+import roide.nanod.popularmovies.database.FavoriteDbContract;
+import roide.nanod.popularmovies.database.FavoriteMovieContentProvider;
 import roide.nanod.popularmovies.network.apibuilders.DiscoverMoviesRequestBuilder;
 import roide.nanod.popularmovies.network.models.Movie;
 import roide.nanod.popularmovies.recyclerview.base.BaseAdapter;
@@ -32,6 +37,7 @@ import roide.nanod.popularmovies.recyclerview.base.OnLoadMoreListener;
 import roide.nanod.popularmovies.ui.SortMenuActionView;
 import roide.nanod.popularmovies.ui.SwipeRefreshRecyclerView;
 import roide.nanod.popularmovies.ui.WidgetLoadMore;
+import roide.nanod.popularmovies.util.SortOrder;
 
 /**
  * A placeholder fragment containing a simple view.
@@ -43,13 +49,16 @@ public class DiscoveryFragment extends BaseFragment
     private SwipeRefreshRecyclerView mSwipeRefreshRecyclerView;
     private RecyclerView mRecyclerView;
     private BaseAdapter mBaseAdapter;
-    private MovieAPI.SortOrder mCurrentSortOrder = MovieAPI.SortOrder.MOST_POPULAR;
+    private SortOrder mCurrentSortOrder = SortOrder.MOST_POPULAR;
 
     private List<Movie> mMoviesList;
     private int mPageNumber = 1;
     private WeakReference<WidgetLoadMore> mWidgetLoadMoreRef;
 
     private boolean mLoadingMore = false;
+    private List<Movie> mFavoriteMovieList = new ArrayList<>();
+
+    private boolean mIsLoaderInitialized;
 
     private ArrayList<String> mSortMenuSpinnerList = new ArrayList<>();
     private Spinner.OnItemSelectedListener mSortItemSelectedListener = new AdapterView.OnItemSelectedListener()
@@ -70,25 +79,70 @@ public class DiscoveryFragment extends BaseFragment
 
         }
     };
-/*
-    private Comparator<Movie> mMovieComparator = new Comparator<Movie>()
-    {
+
+    LoaderManager.LoaderCallbacks<Cursor> mCursorLoaderCallbacks = new LoaderManager.LoaderCallbacks<Cursor>() {
         @Override
-        public int compare(Movie lhs, Movie rhs)
-        {
-            if(mCurrentSortOrder == MovieAPI.SortOrder.MOST_POPULAR)
-            {
-                float diff = rhs.getPopularity()*100 - lhs.getPopularity()*100;
-                return (int)(diff);
-            }
-            else
-            {
-                float diff = rhs.getVote_average()*100 - lhs.getVote_average()*100;
-                return (int)(diff);
-            }
+        public Loader<Cursor> onCreateLoader(int id, Bundle args) {
+            return new CursorLoader(
+                getContext(),
+                FavoriteMovieContentProvider.CONTENT_URI_MOVIES,
+                null,
+                null,
+                null,
+                null
+            );
         }
+
+        @Override
+        public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {
+            mFavoriteMovieList.clear();
+
+            if (cursor != null) {
+                cursor.moveToPosition(-1);
+                int indexId = cursor.getColumnIndex(FavoriteDbContract.Entry.MOV_ID);
+                int indexOrgTitle = cursor.getColumnIndex(FavoriteDbContract.Entry.MOV_ORIGINAL_TITLE);
+                int indexOverview = cursor.getColumnIndex(FavoriteDbContract.Entry.MOV_OVERVIEW);
+                int indexRelDate = cursor.getColumnIndex(FavoriteDbContract.Entry.MOV_RELEASE_DATE);
+                int indexPop = cursor.getColumnIndex(FavoriteDbContract.Entry.MOV_POPULARITY);
+                int indexTitle = cursor.getColumnIndex(FavoriteDbContract.Entry.MOV_TITLE);
+                int indexVoteAvg = cursor.getColumnIndex(FavoriteDbContract.Entry.MOV_VOTE_AVERAGE);
+                int indexBackdrop = cursor.getColumnIndex(FavoriteDbContract.Entry.MOV_BACKDROP_PATH);
+                int indexPoster = cursor.getColumnIndex(FavoriteDbContract.Entry.MOV_POSTER_PATH);
+                int indexVoteCount = cursor.getColumnIndex(FavoriteDbContract.Entry.MOV_VOTE_COUNT);
+                int indexFav = cursor.getColumnIndex(FavoriteDbContract.Entry.MOV_IS_FAVORITE);
+
+                while (cursor.moveToNext()) {
+                    boolean isFavorite = cursor.getInt(indexFav) == 1 ? true : false;
+                    Movie movie = new Movie();
+                    movie.setId(cursor.getInt(indexId));
+                    movie.setOriginal_title(cursor.getString(indexOrgTitle));
+                    movie.setOverview(cursor.getString(indexOverview));
+                    movie.setRelease_date(cursor.getString(indexRelDate));
+                    movie.setPopularity(cursor.getFloat(indexPop));
+                    movie.setTitle(cursor.getString(indexTitle));
+                    movie.setVote_average(cursor.getFloat(indexVoteAvg));
+                    movie.setBackdrop_path(cursor.getString(indexBackdrop));
+                    movie.setPoster_path(cursor.getString(indexPoster));
+                    movie.setVote_count(cursor.getInt(indexVoteCount));
+                    movie.setIsFavorite(isFavorite);
+                    if(isFavorite)
+                    {
+                        mFavoriteMovieList.add(movie);
+                    }
+                }
+            }
+            if(mCurrentSortOrder == SortOrder.FAVORITE)
+            {
+                mMoviesList.clear();
+                mMoviesList.addAll(mFavoriteMovieList);
+                mBaseAdapter.notifyDataSetChanged();
+            }
+            mIsLoaderInitialized = true;
+        }
+
+        @Override
+        public void onLoaderReset(Loader<Cursor> loader) {}
     };
-    */
 
     private SwipeRefreshLayout.OnRefreshListener mSwipeRefreshListener =
             new SwipeRefreshLayout.OnRefreshListener()
@@ -131,22 +185,31 @@ public class DiscoveryFragment extends BaseFragment
         }
     };
 
-    public MovieAPI.SortOrder getSortOrder(int position)
+    public SortOrder getSortOrder(int position)
     {
         if(position == 0)
         {
-            return MovieAPI.SortOrder.MOST_POPULAR;
+            return SortOrder.MOST_POPULAR;
         }
-        return MovieAPI.SortOrder.HIGHEST_RATED;
+        else if(position == 1)
+        {
+            return SortOrder.HIGHEST_RATED;
+        }
+
+        return SortOrder.FAVORITE;
     }
 
-    public int getPositionForSortOrder(MovieAPI.SortOrder sortOrder)
+    public int getPositionForSortOrder(SortOrder sortOrder)
     {
-        if(sortOrder == MovieAPI.SortOrder.MOST_POPULAR)
+        if(sortOrder == SortOrder.MOST_POPULAR)
         {
             return 0;
         }
-        return 1;
+        else if(sortOrder == SortOrder.HIGHEST_RATED)
+        {
+            return 1;
+        }
+        return 2;
     }
 
     //================================================ //
@@ -163,6 +226,7 @@ public class DiscoveryFragment extends BaseFragment
         super.onCreate(savedInstanceState);
         mSortMenuSpinnerList.add("Most Popular");
         mSortMenuSpinnerList.add("Highest Rated");
+        mSortMenuSpinnerList.add("Favorite");
         setHasOptionsMenu(true);
     }
 
@@ -223,22 +287,39 @@ public class DiscoveryFragment extends BaseFragment
         mRecyclerView.setHasFixedSize(true);
         mRecyclerView.setLayoutManager(gridLayoutManager);
         gridLayoutManager.setSpanSizeLookup(mSpanSizeLookup);
-
         mSwipeRefreshRecyclerView.setOnRefreshListener(mSwipeRefreshListener);
+
     }
 
     @Override
     protected void loadData()
     {
-        mSwipeRefreshRecyclerView.post(new Runnable()
+        if(mCurrentSortOrder == SortOrder.FAVORITE)
         {
-            @Override
-            public void run()
+            mBaseAdapter.enableLoadMore(false);
+            mSwipeRefreshRecyclerView.setEnabled(false);
+
+            if(! mIsLoaderInitialized)
             {
-                mSwipeRefreshRecyclerView.setRefreshing(true);
+                getLoaderManager().initLoader(0, null, mCursorLoaderCallbacks);
             }
-        });
-        DiscoverMoviesRequestBuilder.build(getContext())
+            else
+            {
+                mMoviesList.clear();
+                mMoviesList.addAll(mFavoriteMovieList);
+                mBaseAdapter.notifyDataSetChanged();
+            }
+        }
+        else
+        {
+            mSwipeRefreshRecyclerView.post(new Runnable() {
+                @Override
+                public void run() {
+                    mSwipeRefreshRecyclerView.setEnabled(true);
+                    mSwipeRefreshRecyclerView.setRefreshing(true);
+                }
+            });
+            DiscoverMoviesRequestBuilder.build(getContext())
                 .setPage(mPageNumber)
                 .setSortOrder(mCurrentSortOrder)
                 .setCallback(new Callback<List<Movie>>()
@@ -246,7 +327,6 @@ public class DiscoveryFragment extends BaseFragment
                     @Override
                     public void success(List<Movie> movies, Response response)
                     {
-
                         mSwipeRefreshRecyclerView.setRefreshing(false);
                         if(mLoadingMore == true)
                         {
@@ -258,7 +338,8 @@ public class DiscoveryFragment extends BaseFragment
                             }
                             addAll(movies);
                             mBaseAdapter.notifyDataSetChanged();
-                        } else
+                        }
+                        else
                         {
                             if(mMoviesList != null)
                             {
@@ -277,6 +358,7 @@ public class DiscoveryFragment extends BaseFragment
                                 mBaseAdapter.notifyDataSetChanged();
                             }
                         }
+                        mBaseAdapter.enableLoadMore(true);
                     }
 
                     @Override
@@ -295,7 +377,7 @@ public class DiscoveryFragment extends BaseFragment
                         }
                     }
                 }).execute();
-
+        }
     }
 
     private void addAll(List<Movie> movieList)

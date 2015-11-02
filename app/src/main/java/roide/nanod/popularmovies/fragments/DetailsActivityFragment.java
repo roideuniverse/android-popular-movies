@@ -17,7 +17,7 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import roide.nanod.popularmovies.R;
-import roide.nanod.popularmovies.database.FavoriteDbUtil;
+import roide.nanod.popularmovies.util.FavoriteDbUtil;
 import roide.nanod.popularmovies.exceptions.ActivityClosingException;
 import roide.nanod.popularmovies.network.models.Movie;
 import roide.nanod.popularmovies.util.Util;
@@ -123,16 +123,8 @@ public class DetailsActivityFragment extends BaseFragment implements AppBarLayou
     @OnClick(R.id.fragment_details_fab)
     public void onFabClicked(View view)
     {
-        if(mMovie.getIsFavorite())
-        {
-            FavoriteDbUtil.doFavorite(mMovie, false, getContext());
-            mMovie.setIsFavorite(false);
-        }
-        else
-        {
-            FavoriteDbUtil.doFavorite(mMovie, true, getContext());
-            mMovie.setIsFavorite(true);
-        }
+        mMovie.setIsFavorite(!mMovie.getIsFavorite());
+        FavoriteDbUtil.saveMovie(mMovie, getContext());
         refreshFabUI();
     }
 
