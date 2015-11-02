@@ -3,16 +3,21 @@ package roide.nanod.popularmovies.fragments;
 import android.os.Bundle;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -21,9 +26,11 @@ import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 import roide.nanod.popularmovies.R;
-import roide.nanod.popularmovies.network.MovieAPI;
 import roide.nanod.popularmovies.network.MoviesRequestBuilder;
 import roide.nanod.popularmovies.network.models.Videos;
+import roide.nanod.popularmovies.recyclerview.base.BaseAdapter;
+import roide.nanod.popularmovies.recyclerview.base.BaseModel;
+import roide.nanod.popularmovies.ui.TrailerRowWidget;
 import roide.nanod.popularmovies.util.FavoriteDbUtil;
 import roide.nanod.popularmovies.exceptions.ActivityClosingException;
 import roide.nanod.popularmovies.network.models.Movie;
@@ -57,6 +64,7 @@ public class DetailsActivityFragment extends BaseFragment implements AppBarLayou
     @Bind(R.id.appbar) AppBarLayout mAppBarLayout;
     @Bind(R.id.fragment_details_fab) FloatingActionButton mFloatingActionButton;
     @Bind(R.id.fragment_container_display_pic_container) FrameLayout mDPContainer;
+    @Bind(R.id.fragment_details_trailer_container) LinearLayout mTrailerContainer;
 
     private Movie mMovie;
 
@@ -158,8 +166,11 @@ public class DetailsActivityFragment extends BaseFragment implements AppBarLayou
             {
                 for(Videos.TrailerDetails trailerDetails : videos.getResults())
                 {
-
+                    TrailerRowWidget widget = new TrailerRowWidget(getContext());
+                    widget.setTrailerDetails(trailerDetails);
+                    mTrailerContainer.addView(widget);
                 }
+                mTrailerContainer.invalidate();
             }
 
             @Override
