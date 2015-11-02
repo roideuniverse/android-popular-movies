@@ -4,7 +4,7 @@ package roide.nanod.popularmovies.database;
  * Created by roide on 11/1/15.
  */
 public interface FavoriteDbContract {
-    int DATABASE_VERSION = 3;
+    int DATABASE_VERSION = 4;
     String DATABASE_NAME = "FAVORITE.DB";
     String TABLE_NAME = "favorite_table";
 

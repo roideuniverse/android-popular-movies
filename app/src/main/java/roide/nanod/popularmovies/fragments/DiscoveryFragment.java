@@ -1,7 +1,12 @@
 package roide.nanod.popularmovies.fragments;
 
+import android.content.ContentResolver;
+import android.database.Cursor;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.app.LoaderManager;
+import android.support.v4.content.CursorLoader;
+import android.support.v4.content.Loader;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -22,6 +27,8 @@ import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 import roide.nanod.popularmovies.R;
+import roide.nanod.popularmovies.database.FavoriteDbContract;
+import roide.nanod.popularmovies.database.FavoriteMovieContentProvider;
 import roide.nanod.popularmovies.network.apibuilders.DiscoverMoviesRequestBuilder;
 import roide.nanod.popularmovies.network.models.Movie;
 import roide.nanod.popularmovies.recyclerview.base.BaseAdapter;
@@ -30,7 +37,6 @@ import roide.nanod.popularmovies.recyclerview.base.OnLoadMoreListener;
 import roide.nanod.popularmovies.ui.SortMenuActionView;
 import roide.nanod.popularmovies.ui.SwipeRefreshRecyclerView;
 import roide.nanod.popularmovies.ui.WidgetLoadMore;
-import roide.nanod.popularmovies.util.FavoriteDbUtil;
 import roide.nanod.popularmovies.util.SortOrder;
 
 /**
@@ -50,6 +56,9 @@ public class DiscoveryFragment extends BaseFragment
     private WeakReference<WidgetLoadMore> mWidgetLoadMoreRef;
 
     private boolean mLoadingMore = false;
+    private List<Movie> mFavoriteMovieList = new ArrayList<>();
+
+    private boolean mIsLoaderInitialized;
 
     private ArrayList<String> mSortMenuSpinnerList = new ArrayList<>();
     private Spinner.OnItemSelectedListener mSortItemSelectedListener = new AdapterView.OnItemSelectedListener()
@@ -69,6 +78,70 @@ public class DiscoveryFragment extends BaseFragment
         {
 
         }
+    };
+
+    LoaderManager.LoaderCallbacks<Cursor> mCursorLoaderCallbacks = new LoaderManager.LoaderCallbacks<Cursor>() {
+        @Override
+        public Loader<Cursor> onCreateLoader(int id, Bundle args) {
+            return new CursorLoader(
+                getContext(),
+                FavoriteMovieContentProvider.CONTENT_URI_MOVIES,
+                null,
+                null,
+                null,
+                null
+            );
+        }
+
+        @Override
+        public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {
+            mFavoriteMovieList.clear();
+
+            if (cursor != null) {
+                cursor.moveToPosition(-1);
+                int indexId = cursor.getColumnIndex(FavoriteDbContract.Entry.MOV_ID);
+                int indexOrgTitle = cursor.getColumnIndex(FavoriteDbContract.Entry.MOV_ORIGINAL_TITLE);
+                int indexOverview = cursor.getColumnIndex(FavoriteDbContract.Entry.MOV_OVERVIEW);
+                int indexRelDate = cursor.getColumnIndex(FavoriteDbContract.Entry.MOV_RELEASE_DATE);
+                int indexPop = cursor.getColumnIndex(FavoriteDbContract.Entry.MOV_POPULARITY);
+                int indexTitle = cursor.getColumnIndex(FavoriteDbContract.Entry.MOV_TITLE);
+                int indexVoteAvg = cursor.getColumnIndex(FavoriteDbContract.Entry.MOV_VOTE_AVERAGE);
+                int indexBackdrop = cursor.getColumnIndex(FavoriteDbContract.Entry.MOV_BACKDROP_PATH);
+                int indexPoster = cursor.getColumnIndex(FavoriteDbContract.Entry.MOV_POSTER_PATH);
+                int indexVoteCount = cursor.getColumnIndex(FavoriteDbContract.Entry.MOV_VOTE_COUNT);
+                int indexFav = cursor.getColumnIndex(FavoriteDbContract.Entry.MOV_IS_FAVORITE);
+
+                while (cursor.moveToNext()) {
+                    boolean isFavorite = cursor.getInt(indexFav) == 1 ? true : false;
+                    Movie movie = new Movie();
+                    movie.setId(cursor.getInt(indexId));
+                    movie.setOriginal_title(cursor.getString(indexOrgTitle));
+                    movie.setOverview(cursor.getString(indexOverview));
+                    movie.setRelease_date(cursor.getString(indexRelDate));
+                    movie.setPopularity(cursor.getFloat(indexPop));
+                    movie.setTitle(cursor.getString(indexTitle));
+                    movie.setVote_average(cursor.getFloat(indexVoteAvg));
+                    movie.setBackdrop_path(cursor.getString(indexBackdrop));
+                    movie.setPoster_path(cursor.getString(indexPoster));
+                    movie.setVote_count(cursor.getInt(indexVoteCount));
+                    movie.setIsFavorite(isFavorite);
+                    if(isFavorite)
+                    {
+                        mFavoriteMovieList.add(movie);
+                    }
+                }
+            }
+            if(mCurrentSortOrder == SortOrder.FAVORITE)
+            {
+                mMoviesList.clear();
+                mMoviesList.addAll(mFavoriteMovieList);
+                mBaseAdapter.notifyDataSetChanged();
+            }
+            mIsLoaderInitialized = true;
+        }
+
+        @Override
+        public void onLoaderReset(Loader<Cursor> loader) {}
     };
 
     private SwipeRefreshLayout.OnRefreshListener mSwipeRefreshListener =
@@ -214,8 +287,8 @@ public class DiscoveryFragment extends BaseFragment
         mRecyclerView.setHasFixedSize(true);
         mRecyclerView.setLayoutManager(gridLayoutManager);
         gridLayoutManager.setSpanSizeLookup(mSpanSizeLookup);
-
         mSwipeRefreshRecyclerView.setOnRefreshListener(mSwipeRefreshListener);
+
     }
 
     @Override
@@ -223,14 +296,19 @@ public class DiscoveryFragment extends BaseFragment
     {
         if(mCurrentSortOrder == SortOrder.FAVORITE)
         {
-            if(mMoviesList != null)
-            {
-                mMoviesList.clear();
-            }
             mBaseAdapter.enableLoadMore(false);
             mSwipeRefreshRecyclerView.setEnabled(false);
-            addAll(FavoriteDbUtil.getAllFavoriteList(getContext()));
-            mBaseAdapter.notifyDataSetChanged();
+
+            if(! mIsLoaderInitialized)
+            {
+                getLoaderManager().initLoader(0, null, mCursorLoaderCallbacks);
+            }
+            else
+            {
+                mMoviesList.clear();
+                mMoviesList.addAll(mFavoriteMovieList);
+                mBaseAdapter.notifyDataSetChanged();
+            }
         }
         else
         {

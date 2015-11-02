@@ -23,7 +23,7 @@ public class FavoriteDbUtil {
     private FavoriteDbUtil() {
     }
 
-    public static List<Movie> getAllFavoriteList(Context context) {
+    private static List<Movie> getAllFavoriteList(Context context) {
         List<Movie> movieList = new ArrayList<>();
         ContentResolver resolver = context.getContentResolver();
         String[] projection = null;
@@ -86,7 +86,8 @@ public class FavoriteDbUtil {
         value.put(FavoriteDbContract.Entry.MOV_BACKDROP_PATH, movie.getBackdrop_path());
         value.put(FavoriteDbContract.Entry.MOV_POSTER_PATH, movie.getPoster_path());
         value.put(FavoriteDbContract.Entry.MOV_VOTE_COUNT, movie.getVote_count());
-        value.put(FavoriteDbContract.Entry.MOV_IS_FAVORITE, movie.getIsFavorite());
+        int isFav = movie.getIsFavorite() == true ? IS_FAVORITE : IS_NOT_FAVORITE;
+        value.put(FavoriteDbContract.Entry.MOV_IS_FAVORITE, isFav);
 
         resolver.insert(FavoriteMovieContentProvider.CONTENT_URI_MOVIES, value);
     }
