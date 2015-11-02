@@ -16,7 +16,7 @@ public class MoviesRequestBuilder
     {
         RestAdapter adapter = new RestAdapter.Builder()
                 .setEndpoint(BASE_URL)
-                //.setLogLevel(RestAdapter.LogLevel.FULL)
+                .setLogLevel(RestAdapter.LogLevel.FULL)
                 .build();
 
         mMovieAPI = adapter.create(MovieAPI.class);

@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,7 +17,13 @@ import com.squareup.picasso.Picasso;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import retrofit.Callback;
+import retrofit.RetrofitError;
+import retrofit.client.Response;
 import roide.nanod.popularmovies.R;
+import roide.nanod.popularmovies.network.MovieAPI;
+import roide.nanod.popularmovies.network.MoviesRequestBuilder;
+import roide.nanod.popularmovies.network.models.Videos;
 import roide.nanod.popularmovies.util.FavoriteDbUtil;
 import roide.nanod.popularmovies.exceptions.ActivityClosingException;
 import roide.nanod.popularmovies.network.models.Movie;
@@ -79,6 +86,7 @@ public class DetailsActivityFragment extends BaseFragment implements AppBarLayou
     {
         try
         {
+            loadTrailers();
             getBaseActivity().setSupportActionBar(mToolbar);
             getBaseActivity().getSupportActionBar().setDisplayHomeAsUpEnabled(true);
             getBaseActivity().setTitle(mMovie.getTitle());
@@ -138,5 +146,26 @@ public class DetailsActivityFragment extends BaseFragment implements AppBarLayou
         {
             mFloatingActionButton.setImageResource(R.drawable.ic_favorite_false);
         }
+    }
+
+    private void loadTrailers()
+    {
+        String apiKey = getString(R.string.api_key);
+        MoviesRequestBuilder.getInstance().getVideos(mMovie.getId(), apiKey, new Callback<Videos>()
+        {
+            @Override
+            public void success(Videos videos, Response response)
+            {
+                for(Videos.TrailerDetails trailerDetails : videos.getResults())
+                {
+
+                }
+            }
+
+            @Override
+            public void failure(RetrofitError error) {
+
+            }
+        });
     }
 }
