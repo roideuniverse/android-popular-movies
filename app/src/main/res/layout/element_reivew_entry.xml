@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="@dimen/standard_margins"
+    >
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:background="@color/transparent_black_t10"
+        android:padding="@dimen/half_margins"
+        >
+
+        <ImageView
+            android:layout_width="@dimen/double_margins"
+            android:layout_height="@dimen/double_margins"
+            android:alpha="0.5"
+            android:src="@drawable/user_icon"
+            />
+        
+        <TextView
+            android:id="@+id/element_reviews_author_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingLeft="@dimen/half_margins"
+            android:textSize="16dp"
+            android:textStyle="bold"
+            android:text="Liam"
+            />
+
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/element_reviews_text_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="@dimen/standard_margins"
+        />
+
+</LinearLayout>
