@@ -1,6 +1,9 @@
 package roide.nanod.popularmovies.ui;
 
+import android.content.ActivityNotFoundException;
 import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -39,11 +42,24 @@ public class TrailerRowWidget extends FrameLayout
 
     public void setTrailerDetails(Videos.TrailerDetails trailerDetails)
     {
+        final String video = trailerDetails.getKey();
         mTrailerName.setText(trailerDetails.getName());
-        mContainer.setOnClickListener(new OnClickListener() {
+        mContainer.setOnClickListener(new OnClickListener()
+        {
             @Override
-            public void onClick(View v) {
-
+            public void onClick(View v)
+            {
+                try {
+                    Intent intent = new Intent(Intent.ACTION_VIEW,
+                        Uri.parse("vnd.youtube:" + video));
+                    v.getContext().startActivity(intent);
+                }
+                catch (ActivityNotFoundException ex)
+                {
+                    Intent intent = new Intent(Intent.ACTION_VIEW,
+                        Uri.parse("http://www.youtube.com/watch?v=" + video));
+                    v.getContext().startActivity(intent);
+                }
             }
         });
     }

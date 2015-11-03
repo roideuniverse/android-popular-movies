@@ -12,6 +12,7 @@ import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
@@ -65,6 +66,8 @@ public class DetailsActivityFragment extends BaseFragment implements AppBarLayou
     @Bind(R.id.fragment_details_fab) FloatingActionButton mFloatingActionButton;
     @Bind(R.id.fragment_container_display_pic_container) FrameLayout mDPContainer;
     @Bind(R.id.fragment_details_trailer_container) LinearLayout mTrailerContainer;
+    @Bind(R.id.fragment_details_trailer_pb) ProgressBar mTrailerProgressBar;
+    @Bind(R.id.fragment_details_trailer_header) TextView mTrailerHeader;
 
     private Movie mMovie;
 
@@ -119,7 +122,6 @@ public class DetailsActivityFragment extends BaseFragment implements AppBarLayou
         mTvMovieRating.setText(String.valueOf(mMovie.getVote_average()));
         mTvMovieRatingUserCount.setText(String.valueOf(mMovie.getVote_count()));
         mTvMovieSummary.setText(mMovie.getOverview());
-
     }
 
     @Override
@@ -164,13 +166,14 @@ public class DetailsActivityFragment extends BaseFragment implements AppBarLayou
             @Override
             public void success(Videos videos, Response response)
             {
+                mTrailerProgressBar.setVisibility(View.GONE);
                 for(Videos.TrailerDetails trailerDetails : videos.getResults())
                 {
+                    mTrailerHeader.setVisibility(View.VISIBLE);
                     TrailerRowWidget widget = new TrailerRowWidget(getContext());
                     widget.setTrailerDetails(trailerDetails);
                     mTrailerContainer.addView(widget);
                 }
-                mTrailerContainer.invalidate();
             }
 
             @Override

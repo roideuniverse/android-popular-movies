@@ -210,12 +210,36 @@
 
             </LinearLayout>
 
-            <LinearLayout
-                android:id="@+id/fragment_details_trailer_container"
+            <TextView
+                android:id="@+id/fragment_details_trailer_header"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Trailers"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:visibility="gone"
+                android:paddingLeft="@dimen/standard_margins"
+                />
+
+            <FrameLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
-                />
+                >
+
+                <LinearLayout
+                    android:id="@+id/fragment_details_trailer_container"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    />
+
+                <ProgressBar
+                    android:id="@+id/fragment_details_trailer_pb"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    />
+            </FrameLayout>
 
         </LinearLayout>
 
