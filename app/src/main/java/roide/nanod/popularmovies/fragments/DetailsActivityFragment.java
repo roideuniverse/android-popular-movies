@@ -3,20 +3,35 @@ package roide.nanod.popularmovies.fragments;
 import android.os.Bundle;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import retrofit.Callback;
+import retrofit.RetrofitError;
+import retrofit.client.Response;
 import roide.nanod.popularmovies.R;
+import roide.nanod.popularmovies.network.MoviesRequestBuilder;
+import roide.nanod.popularmovies.network.models.Videos;
+import roide.nanod.popularmovies.recyclerview.base.BaseAdapter;
+import roide.nanod.popularmovies.recyclerview.base.BaseModel;
+import roide.nanod.popularmovies.ui.TrailerRowWidget;
 import roide.nanod.popularmovies.util.FavoriteDbUtil;
 import roide.nanod.popularmovies.exceptions.ActivityClosingException;
 import roide.nanod.popularmovies.network.models.Movie;
@@ -50,6 +65,9 @@ public class DetailsActivityFragment extends BaseFragment implements AppBarLayou
     @Bind(R.id.appbar) AppBarLayout mAppBarLayout;
     @Bind(R.id.fragment_details_fab) FloatingActionButton mFloatingActionButton;
     @Bind(R.id.fragment_container_display_pic_container) FrameLayout mDPContainer;
+    @Bind(R.id.fragment_details_trailer_container) LinearLayout mTrailerContainer;
+    @Bind(R.id.fragment_details_trailer_pb) ProgressBar mTrailerProgressBar;
+    @Bind(R.id.fragment_details_trailer_header) TextView mTrailerHeader;
 
     private Movie mMovie;
 
@@ -79,6 +97,7 @@ public class DetailsActivityFragment extends BaseFragment implements AppBarLayou
     {
         try
         {
+            loadTrailers();
             getBaseActivity().setSupportActionBar(mToolbar);
             getBaseActivity().getSupportActionBar().setDisplayHomeAsUpEnabled(true);
             getBaseActivity().setTitle(mMovie.getTitle());
@@ -103,7 +122,6 @@ public class DetailsActivityFragment extends BaseFragment implements AppBarLayou
         mTvMovieRating.setText(String.valueOf(mMovie.getVote_average()));
         mTvMovieRatingUserCount.setText(String.valueOf(mMovie.getVote_count()));
         mTvMovieSummary.setText(mMovie.getOverview());
-
     }
 
     @Override
@@ -138,5 +156,30 @@ public class DetailsActivityFragment extends BaseFragment implements AppBarLayou
         {
             mFloatingActionButton.setImageResource(R.drawable.ic_favorite_false);
         }
+    }
+
+    private void loadTrailers()
+    {
+        String apiKey = getString(R.string.api_key);
+        MoviesRequestBuilder.getInstance().getVideos(mMovie.getId(), apiKey, new Callback<Videos>()
+        {
+            @Override
+            public void success(Videos videos, Response response)
+            {
+                mTrailerProgressBar.setVisibility(View.GONE);
+                for(Videos.TrailerDetails trailerDetails : videos.getResults())
+                {
+                    mTrailerHeader.setVisibility(View.VISIBLE);
+                    TrailerRowWidget widget = new TrailerRowWidget(getContext());
+                    widget.setTrailerDetails(trailerDetails);
+                    mTrailerContainer.addView(widget);
+                }
+            }
+
+            @Override
+            public void failure(RetrofitError error) {
+
+            }
+        });
     }
 }

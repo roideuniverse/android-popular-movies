@@ -2,7 +2,9 @@ package roide.nanod.popularmovies.network;
 
 import retrofit.Callback;
 import retrofit.http.GET;
+import retrofit.http.Path;
 import retrofit.http.Query;
+import roide.nanod.popularmovies.network.models.Videos;
 import roide.nanod.popularmovies.network.responses.DiscoverMoviesResponse;
 
 /**
@@ -20,5 +22,12 @@ public interface MovieAPI
             @Query(QUERY_PAGE) int page,
             @Query(QUERY_SORT_BY) String sortBy,
             Callback<DiscoverMoviesResponse> callback
+    );
+
+    @GET("/movie/{id}/videos")
+    void getVideos(
+        @Path("id") int id,
+        @Query(QUERY_API_KEY) String apiKey,
+        Callback<Videos> callback
     );
 }

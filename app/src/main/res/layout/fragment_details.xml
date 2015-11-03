@@ -20,7 +20,7 @@
         <android.support.design.widget.CollapsingToolbarLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            app:contentScrim="@color/transparent_black_t90"
+            app:contentScrim="@color/transparent_black_t50"
             app:expandedTitleMarginBottom="120dp"
             app:collapsedTitleTextAppearance="@style/Text.CollapsedAppBarTitle"
             app:expandedTitleTextAppearance="@style/Text.ExpandedAppBarTitle"
@@ -190,7 +190,7 @@
             <View
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/sixteenth_margin"
-                android:background="@color/transparent_black_t90"
+                android:background="@color/transparent_black_t50"
                 android:layout_marginLeft="@dimen/double_margins"
                 android:layout_marginRight="@dimen/double_margins"
                 />
@@ -209,6 +209,37 @@
                     />
 
             </LinearLayout>
+
+            <TextView
+                android:id="@+id/fragment_details_trailer_header"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Trailers"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:visibility="gone"
+                android:paddingLeft="@dimen/standard_margins"
+                />
+
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                >
+
+                <LinearLayout
+                    android:id="@+id/fragment_details_trailer_container"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    />
+
+                <ProgressBar
+                    android:id="@+id/fragment_details_trailer_pb"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    />
+            </FrameLayout>
 
         </LinearLayout>
 

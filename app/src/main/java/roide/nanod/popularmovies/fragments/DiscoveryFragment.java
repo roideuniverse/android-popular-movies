@@ -1,6 +1,5 @@
 package roide.nanod.popularmovies.fragments;
 
-import android.content.ContentResolver;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -32,7 +31,8 @@ import roide.nanod.popularmovies.database.FavoriteMovieContentProvider;
 import roide.nanod.popularmovies.network.apibuilders.DiscoverMoviesRequestBuilder;
 import roide.nanod.popularmovies.network.models.Movie;
 import roide.nanod.popularmovies.recyclerview.base.BaseAdapter;
-import roide.nanod.popularmovies.recyclerview.DiscoverItemDecor;
+import roide.nanod.popularmovies.recyclerview.base.BaseModel;
+import roide.nanod.popularmovies.recyclerview.discover.DiscoverItemDecor;
 import roide.nanod.popularmovies.recyclerview.base.OnLoadMoreListener;
 import roide.nanod.popularmovies.ui.SortMenuActionView;
 import roide.nanod.popularmovies.ui.SwipeRefreshRecyclerView;
@@ -44,14 +44,13 @@ import roide.nanod.popularmovies.util.SortOrder;
  */
 public class DiscoveryFragment extends BaseFragment
 {
-
     private static final String SORT_ORDER = "sort-order";
     private SwipeRefreshRecyclerView mSwipeRefreshRecyclerView;
     private RecyclerView mRecyclerView;
     private BaseAdapter mBaseAdapter;
     private SortOrder mCurrentSortOrder = SortOrder.MOST_POPULAR;
 
-    private List<Movie> mMoviesList;
+    private List<BaseModel> mMoviesList;
     private int mPageNumber = 1;
     private WeakReference<WidgetLoadMore> mWidgetLoadMoreRef;
 

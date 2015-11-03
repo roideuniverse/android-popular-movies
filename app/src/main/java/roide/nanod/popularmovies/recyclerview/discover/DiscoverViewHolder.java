@@ -1,4 +1,4 @@
-package roide.nanod.popularmovies.recyclerview;
+package roide.nanod.popularmovies.recyclerview.discover;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.View;

@@ -3,10 +3,14 @@ package roide.nanod.popularmovies.network.models;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import roide.nanod.popularmovies.recyclerview.base.BaseModel;
+
 /**
  * Created by roide on 9/8/15.
  */
-public class Movie implements Parcelable {
+public class Movie extends BaseModel implements Parcelable {
+    public static final int VIEW_TYPE = 0;
+
     private int id;
     private String original_title;
     private String overview;
@@ -159,5 +163,10 @@ public class Movie implements Parcelable {
 
     public void setVote_count(int vote_count) {
         this.vote_count = vote_count;
+    }
+
+    @Override
+    public int getType() {
+        return VIEW_TYPE;
     }
 }

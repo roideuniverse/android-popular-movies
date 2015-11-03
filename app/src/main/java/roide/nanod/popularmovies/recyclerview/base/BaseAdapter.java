@@ -9,35 +9,33 @@ import java.util.List;
 
 import roide.nanod.popularmovies.R;
 import roide.nanod.popularmovies.network.models.Movie;
-import roide.nanod.popularmovies.recyclerview.LoadMoreViewHolder;
-import roide.nanod.popularmovies.recyclerview.DiscoverViewHolder;
+import roide.nanod.popularmovies.recyclerview.loadmore.LoadMoreModel;
+import roide.nanod.popularmovies.recyclerview.loadmore.LoadMoreViewHolder;
+import roide.nanod.popularmovies.recyclerview.discover.DiscoverViewHolder;
 import roide.nanod.popularmovies.ui.WidgetLoadMore;
 
 public class BaseAdapter extends RecyclerView.Adapter<BaseViewHolder>
 {
-    private static final int VIEW_MOVIE = 0;
-    private static final int VIEW_FOOTER = 1;
-
-    private List<Movie> mMovieList;
+    private List<BaseModel> mModelList;
     private WidgetLoadMore mWidgetLoadMore;
     private OnLoadMoreListener mLoadMoreListener;
     private boolean mLoadMoreEnabled;
 
-    public BaseAdapter(List<Movie> movies)
+    public BaseAdapter(List<BaseModel> movies)
     {
-        mMovieList = movies;
+        mModelList = movies;
     }
 
     @Override
     public BaseViewHolder onCreateViewHolder(ViewGroup viewGroup, int viewType)
     {
-        if(viewType == VIEW_MOVIE)
+        if(viewType == Movie.VIEW_TYPE)
         {
             View root = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.element_discover_grid_view,
                     viewGroup, false);
             return new DiscoverViewHolder(root);
         }
-        else if(viewType == VIEW_FOOTER && mLoadMoreEnabled)
+        else if(viewType == LoadMoreModel.VIEW_TYPE && mLoadMoreEnabled)
         {
             mWidgetLoadMore = new WidgetLoadMore(viewGroup.getContext());
             return new LoadMoreViewHolder(mWidgetLoadMore);
@@ -48,14 +46,14 @@ public class BaseAdapter extends RecyclerView.Adapter<BaseViewHolder>
     @Override
     public void onBindViewHolder(BaseViewHolder baseViewHolder, int position)
     {
-        if(position >= mMovieList.size())
+        if(position >= mModelList.size())
         {
             mWidgetLoadMore.setOnLoadMoreListener(mLoadMoreListener);
             baseViewHolder.bind(mWidgetLoadMore);
         }
         else
         {
-            baseViewHolder.bind(mMovieList.get(position));
+            baseViewHolder.bind(mModelList.get(position));
         }
     }
 
@@ -64,22 +62,22 @@ public class BaseAdapter extends RecyclerView.Adapter<BaseViewHolder>
     {
         if(mLoadMoreEnabled)
         {
-            return mMovieList.size() + 1;
+            return mModelList.size() + 1;
         }
         else
         {
-            return mMovieList.size();
+            return mModelList.size();
         }
     }
 
     @Override
     public int getItemViewType(int position)
     {
-        if(position >= mMovieList.size())
+        if(position >= mModelList.size())
         {
-            return VIEW_FOOTER;
+            return LoadMoreModel.VIEW_TYPE;
         }
-        return VIEW_MOVIE;
+        return mModelList.get(position).getType();
     }
 
     public void setOnLoadMoreListener(OnLoadMoreListener onLoadMoreListener)
