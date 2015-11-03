@@ -1,5 +1,6 @@
 package roide.nanod.popularmovies.fragments;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.FloatingActionButton;
@@ -7,6 +8,9 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
@@ -14,6 +18,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.squareup.picasso.Picasso;
 
@@ -70,6 +75,7 @@ public class DetailsActivityFragment extends BaseFragment implements AppBarLayou
     @Bind(R.id.fragment_details_trailer_header) TextView mTrailerHeader;
 
     private Movie mMovie;
+    private String mTrailerKey;
 
     public DetailsActivityFragment()
     {
@@ -80,7 +86,30 @@ public class DetailsActivityFragment extends BaseFragment implements AppBarLayou
                              Bundle savedInstanceState)
     {
         mMovie = getArguments().getParcelable(ARG_MOVIE);
+        setHasOptionsMenu(true);
         return inflater.inflate(R.layout.fragment_details, container, false);
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater)
+    {
+        super.onCreateOptionsMenu(menu, inflater);
+        inflater.inflate(R.menu.menu_trailer_share, menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item)
+    {
+        if(item.getItemId() == R.id.action_share)
+        {
+            String url = "http://www.youtube.com/watch?v=" + mTrailerKey;
+            Intent sendIntent = new Intent();
+            sendIntent.setAction(Intent.ACTION_SEND);
+            sendIntent.putExtra(Intent.EXTRA_TEXT, url);
+            sendIntent.setType("text/plain");
+            startActivity(sendIntent);
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     private static final String TAG = DetailsActivityFragment.class.getSimpleName();
@@ -169,6 +198,10 @@ public class DetailsActivityFragment extends BaseFragment implements AppBarLayou
                 mTrailerProgressBar.setVisibility(View.GONE);
                 for(Videos.TrailerDetails trailerDetails : videos.getResults())
                 {
+                    if(mTrailerKey == null)
+                    {
+                        mTrailerKey = trailerDetails.getKey();
+                    }
                     mTrailerHeader.setVisibility(View.VISIBLE);
                     TrailerRowWidget widget = new TrailerRowWidget(getContext());
                     widget.setTrailerDetails(trailerDetails);
