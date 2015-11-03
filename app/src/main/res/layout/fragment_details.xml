@@ -215,7 +215,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Trailers"
-                android:textSize="18sp"
+                android:textSize="20sp"
                 android:textStyle="bold"
                 android:visibility="gone"
                 android:paddingLeft="@dimen/standard_margins"
@@ -235,6 +235,37 @@
 
                 <ProgressBar
                     android:id="@+id/fragment_details_trailer_pb"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    />
+            </FrameLayout>
+
+            <TextView
+                android:id="@+id/fragment_details_reviews_header"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Reviews"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                android:visibility="gone"
+                android:paddingLeft="@dimen/standard_margins"
+                />
+
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                >
+
+                <LinearLayout
+                    android:id="@+id/fragment_details_reviews_container"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    />
+
+                <ProgressBar
+                    android:id="@+id/fragment_details_reviews_pb"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"

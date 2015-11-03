@@ -29,8 +29,10 @@ import roide.nanod.popularmovies.R;
 import roide.nanod.popularmovies.exceptions.ActivityClosingException;
 import roide.nanod.popularmovies.network.MoviesRequestBuilder;
 import roide.nanod.popularmovies.network.models.Movie;
+import roide.nanod.popularmovies.network.models.Review;
 import roide.nanod.popularmovies.network.models.Videos;
 import roide.nanod.popularmovies.ui.TrailerRowWidget;
+import roide.nanod.popularmovies.ui.WidgetReviewEntry;
 import roide.nanod.popularmovies.util.FavoriteDbUtil;
 import roide.nanod.popularmovies.util.Util;
 
@@ -65,6 +67,9 @@ public class DetailsActivityFragment extends BaseFragment implements AppBarLayou
     @Bind(R.id.fragment_details_trailer_container) LinearLayout mTrailerContainer;
     @Bind(R.id.fragment_details_trailer_pb) ProgressBar mTrailerProgressBar;
     @Bind(R.id.fragment_details_trailer_header) TextView mTrailerHeader;
+    @Bind(R.id.fragment_details_reviews_container) LinearLayout mReviewsContainer;
+    @Bind(R.id.fragment_details_reviews_pb) ProgressBar mReviewsProgressBar;
+    @Bind(R.id.fragment_details_reviews_header) TextView mReviewsHeader;
 
     private Movie mMovie;
     private String mTrailerKey;
@@ -129,6 +134,7 @@ public class DetailsActivityFragment extends BaseFragment implements AppBarLayou
         try
         {
             loadTrailers();
+            loadReviews();
             getBaseActivity().setSupportActionBar(mToolbar);
             getBaseActivity().getSupportActionBar().setDisplayHomeAsUpEnabled(true);
             getBaseActivity().setTitle(mMovie.getTitle());
@@ -189,40 +195,65 @@ public class DetailsActivityFragment extends BaseFragment implements AppBarLayou
         }
     }
 
-    private void loadTrailers()
-    {
+    private void loadTrailers() {
         String apiKey = getString(R.string.api_key);
-        MoviesRequestBuilder.getInstance().getVideos(mMovie.getId(), apiKey, new Callback<Videos>()
-        {
-            @Override
-            public void success(Videos videos, Response response)
+        MoviesRequestBuilder.getInstance().getVideos(mMovie.getId(), apiKey,
+            new Callback<Videos>()
             {
-                mTrailerProgressBar.setVisibility(View.GONE);
-                for(Videos.TrailerDetails trailerDetails : videos.getResults())
+                @Override
+                public void success(Videos videos, Response response)
                 {
-                    if(mTrailerKey == null)
+                    mTrailerProgressBar.setVisibility(View.GONE);
+                    for (Videos.TrailerDetails trailerDetails : videos.getResults())
                     {
-                        mTrailerKey = trailerDetails.getKey();
-                    }
-                    mTrailerHeader.setVisibility(View.VISIBLE);
-                    TrailerRowWidget widget = new TrailerRowWidget(getContext());
-                    widget.setTrailerDetails(trailerDetails);
-                    mTrailerContainer.addView(widget);
-                    if(mTrailerKey == null && mShareItem != null)
-                    {
-                        mShareItem.setVisible(false);
-                    }
-                    else if(mTrailerKey != null && mShareItem != null)
-                    {
-                        mShareItem.setVisible(true);
+                        if (mTrailerKey == null)
+                        {
+                            mTrailerKey = trailerDetails.getKey();
+                        }
+                        mTrailerHeader.setVisibility(View.VISIBLE);
+                        TrailerRowWidget widget = new TrailerRowWidget(getContext());
+                        widget.setTrailerDetails(trailerDetails);
+                        mTrailerContainer.addView(widget);
+                        if (mTrailerKey == null && mShareItem != null)
+                        {
+                            mShareItem.setVisible(false);
+                        } else if (mTrailerKey != null && mShareItem != null)
+                        {
+                            mShareItem.setVisible(true);
+                        }
                     }
                 }
-            }
 
-            @Override
-            public void failure(RetrofitError error) {
+                @Override
+                public void failure(RetrofitError error) {
 
-            }
-        });
+                }
+            });
+    }
+
+    private void loadReviews() {
+        String apiKey = getString(R.string.api_key);
+        MoviesRequestBuilder.getInstance().getReviews(mMovie.getId(), apiKey,
+            new Callback<Review>()
+            {
+                @Override
+                public void success(Review reviews, Response response)
+                {
+                    mReviewsProgressBar.setVisibility(View.GONE);
+                    for(Review.ReviewDetails rd : reviews.getResults())
+                    {
+                        mReviewsHeader.setVisibility(View.VISIBLE);
+                        WidgetReviewEntry entry = new WidgetReviewEntry(getContext());
+                        entry.setReview(rd);
+                        mReviewsContainer.addView(entry);
+                    }
+                }
+
+                @Override
+                public void failure(RetrofitError error)
+                {
+
+                }
+            });
     }
 }
