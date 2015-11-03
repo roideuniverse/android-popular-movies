@@ -1,11 +1,11 @@
 package roide.nanod.popularmovies.fragments;
 
+import com.squareup.picasso.Picasso;
+
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.FloatingActionButton;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -18,12 +18,6 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
-
-import com.squareup.picasso.Picasso;
-
-import java.util.ArrayList;
-import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -32,14 +26,12 @@ import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 import roide.nanod.popularmovies.R;
+import roide.nanod.popularmovies.exceptions.ActivityClosingException;
 import roide.nanod.popularmovies.network.MoviesRequestBuilder;
+import roide.nanod.popularmovies.network.models.Movie;
 import roide.nanod.popularmovies.network.models.Videos;
-import roide.nanod.popularmovies.recyclerview.base.BaseAdapter;
-import roide.nanod.popularmovies.recyclerview.base.BaseModel;
 import roide.nanod.popularmovies.ui.TrailerRowWidget;
 import roide.nanod.popularmovies.util.FavoriteDbUtil;
-import roide.nanod.popularmovies.exceptions.ActivityClosingException;
-import roide.nanod.popularmovies.network.models.Movie;
 import roide.nanod.popularmovies.util.Util;
 
 /**
@@ -76,6 +68,7 @@ public class DetailsActivityFragment extends BaseFragment implements AppBarLayou
 
     private Movie mMovie;
     private String mTrailerKey;
+    private MenuItem mShareItem;
 
     public DetailsActivityFragment()
     {
@@ -95,6 +88,15 @@ public class DetailsActivityFragment extends BaseFragment implements AppBarLayou
     {
         super.onCreateOptionsMenu(menu, inflater);
         inflater.inflate(R.menu.menu_trailer_share, menu);
+        mShareItem = menu.findItem(R.id.action_share);
+        if(mTrailerKey == null)
+        {
+            mShareItem.setVisible(false);
+        }
+        else
+        {
+            mShareItem.setVisible(true);
+        }
     }
 
     @Override
@@ -206,6 +208,14 @@ public class DetailsActivityFragment extends BaseFragment implements AppBarLayou
                     TrailerRowWidget widget = new TrailerRowWidget(getContext());
                     widget.setTrailerDetails(trailerDetails);
                     mTrailerContainer.addView(widget);
+                    if(mTrailerKey == null && mShareItem != null)
+                    {
+                        mShareItem.setVisible(false);
+                    }
+                    else if(mTrailerKey != null && mShareItem != null)
+                    {
+                        mShareItem.setVisible(true);
+                    }
                 }
             }
 
