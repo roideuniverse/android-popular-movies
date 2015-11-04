@@ -76,7 +76,6 @@
                     android:layout_width="@dimen/fragment_details_movie_display_pic_width"
                     android:layout_height="wrap_content"
                     android:adjustViewBounds="true"
-                    android:scaleType="centerCrop"
                     android:alpha="0"
                     />
 
@@ -141,10 +140,14 @@
                                 >
                                 <ImageView
                                     android:id="@+id/fragment_details_rating_image"
-                                    android:layout_width="@dimen/fragment_details_rating_image_size"
-                                    android:layout_height="@dimen/fragment_details_rating_image_size"
-                                    android:background="@drawable/circle_red"
+                                    android:maxWidth="@dimen/fragment_details_rating_image_size"
+                                    android:maxHeight="@dimen/fragment_details_rating_image_size"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:src="@drawable/circle_red"
                                     android:layout_gravity="center"
+                                    android:adjustViewBounds="true"
+                                    android:scaleType="centerCrop"
                                     />
 
                                 <TextView
@@ -293,7 +296,6 @@
             android:layout_width="@dimen/fragment_details_movie_display_pic_width"
             android:layout_height="wrap_content"
             android:adjustViewBounds="true"
-            android:scaleType="centerCrop"
             android:transitionName="@string/transition_movie_display_image"
             />
 
