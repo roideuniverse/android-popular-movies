@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -171,8 +172,16 @@ public class DetailsActivityFragment extends BaseFragment implements AppBarLayou
     public void onOffsetChanged(AppBarLayout appBarLayout, int vOffset)
     {
         float ratio = 1 - 2 * (float) Math.abs(vOffset)/mAppBarLayout.getHeight();
-        mDPContainer.setAlpha(ratio);
-        mIvDisplayPictureHidden.setAlpha(1 - ratio);
+        if(ratio >= 0.25f)
+        {
+            mDPContainer.setAlpha(ratio);
+            mIvDisplayPictureHidden.setAlpha(1 - ratio);
+        }
+        else
+        {
+            mDPContainer.setAlpha(0);
+            mIvDisplayPictureHidden.setAlpha(1f);
+        }
     }
 
     @OnClick(R.id.fragment_details_fab)

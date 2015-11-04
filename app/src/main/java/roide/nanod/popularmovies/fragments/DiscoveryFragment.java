@@ -326,7 +326,6 @@ public class DiscoveryFragment extends BaseFragment
                     @Override
                     public void success(List<Movie> movies, Response response)
                     {
-                        mSwipeRefreshRecyclerView.setRefreshing(false);
                         if(mLoadingMore == true)
                         {
                             mLoadingMore = false;
@@ -357,13 +356,24 @@ public class DiscoveryFragment extends BaseFragment
                                 mBaseAdapter.notifyDataSetChanged();
                             }
                         }
+                        mSwipeRefreshRecyclerView.post(new Runnable() {
+                            @Override
+                            public void run() {
+                                mSwipeRefreshRecyclerView.setRefreshing(false);
+                            }
+                        });
                         mBaseAdapter.enableLoadMore(true);
                     }
 
                     @Override
                     public void failure(RetrofitError error)
                     {
-                        mSwipeRefreshRecyclerView.setRefreshing(false);
+                        mSwipeRefreshRecyclerView.post(new Runnable() {
+                            @Override
+                            public void run() {
+                                mSwipeRefreshRecyclerView.setRefreshing(false);
+                            }
+                        });
                         if(mLoadingMore == true)
                         {
                             mLoadingMore = false;
