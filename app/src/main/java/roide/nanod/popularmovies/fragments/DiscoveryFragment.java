@@ -1,5 +1,6 @@
 package roide.nanod.popularmovies.fragments;
 
+import android.content.res.Configuration;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -26,6 +27,7 @@ import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 import roide.nanod.popularmovies.R;
+import roide.nanod.popularmovies.activites.DiscoveryActivity;
 import roide.nanod.popularmovies.database.FavoriteDbContract;
 import roide.nanod.popularmovies.database.FavoriteMovieContentProvider;
 import roide.nanod.popularmovies.network.apibuilders.DiscoverMoviesRequestBuilder;
@@ -59,12 +61,16 @@ public class DiscoveryFragment extends BaseFragment
 
     private boolean mIsLoaderInitialized;
 
+    private int mColCount = 2;
+    private int mActiveMenuItem = -1;
+
     private ArrayList<String> mSortMenuSpinnerList = new ArrayList<>();
     private Spinner.OnItemSelectedListener mSortItemSelectedListener = new AdapterView.OnItemSelectedListener()
     {
         @Override
         public void onItemSelected(AdapterView<?> parent, View view, int position, long id)
         {
+            mActiveMenuItem = position;
             if(getSortOrder(position) != mCurrentSortOrder && mMoviesList != null)
             {
                 mCurrentSortOrder = getSortOrder(position);
@@ -133,7 +139,7 @@ public class DiscoveryFragment extends BaseFragment
             if(mCurrentSortOrder == SortOrder.FAVORITE)
             {
                 mMoviesList.clear();
-                mMoviesList.addAll(mFavoriteMovieList);
+                addAll(mFavoriteMovieList);
                 mBaseAdapter.notifyDataSetChanged();
             }
             mIsLoaderInitialized = true;
@@ -165,7 +171,7 @@ public class DiscoveryFragment extends BaseFragment
         {
             if(position >= mMoviesList.size())
             {
-                return 2;
+                return mColCount;
             }
             return 1;
         }
@@ -233,6 +239,12 @@ public class DiscoveryFragment extends BaseFragment
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
     {
+        int orientation = getResources().getConfiguration().orientation;
+        if(orientation == Configuration.ORIENTATION_LANDSCAPE)
+        {
+            mColCount++;
+        }
+
         return inflater.inflate(R.layout.fragment_main_discovery, container, false);
     }
 
@@ -265,6 +277,10 @@ public class DiscoveryFragment extends BaseFragment
             SortMenuActionView actionMenuView = new SortMenuActionView(
                     getActivity().getApplicationContext(), mSortMenuSpinnerList);
             sortItem.setActionView(actionMenuView);
+            if(mActiveMenuItem != -1)
+            {
+                actionMenuView.getSpinner().setSelection(mActiveMenuItem);
+            }
             actionMenuView.getSpinner().setOnItemSelectedListener(mSortItemSelectedListener);
         }
 
@@ -281,7 +297,7 @@ public class DiscoveryFragment extends BaseFragment
     @Override
     protected void prepareViews()
     {
-        GridLayoutManager gridLayoutManager = new GridLayoutManager(getContext(), 2);
+        GridLayoutManager gridLayoutManager = new GridLayoutManager(getContext(), mColCount);
         mRecyclerView = mSwipeRefreshRecyclerView.getRecyclerView();
         mRecyclerView.setHasFixedSize(true);
         mRecyclerView.setLayoutManager(gridLayoutManager);
@@ -305,7 +321,7 @@ public class DiscoveryFragment extends BaseFragment
             else
             {
                 mMoviesList.clear();
-                mMoviesList.addAll(mFavoriteMovieList);
+                addAll(mFavoriteMovieList);
                 mBaseAdapter.notifyDataSetChanged();
             }
         }
@@ -349,7 +365,7 @@ public class DiscoveryFragment extends BaseFragment
                             {
                                 mBaseAdapter = new BaseAdapter(mMoviesList);
                                 mBaseAdapter.setOnLoadMoreListener(mOnLoadMoreListener);
-                                mRecyclerView.addItemDecoration(new DiscoverItemDecor());
+                                mRecyclerView.addItemDecoration(new DiscoverItemDecor(mColCount));
                                 mRecyclerView.setAdapter(mBaseAdapter);
                             } else
                             {
@@ -401,6 +417,7 @@ public class DiscoveryFragment extends BaseFragment
             {
                 continue;
             }
+            movie.setOnSelectedListener(mOnSelectedListener);
             mMoviesList.add(movie);
         }
     }
@@ -413,4 +430,14 @@ public class DiscoveryFragment extends BaseFragment
         }
         return false;
     }
+
+    private DetailsActivityFragment.OnSelectedListener mOnSelectedListener =
+        new DetailsActivityFragment.OnSelectedListener()
+        {
+        @Override
+        public void onMovieSelected(Movie movie, View view)
+        {
+            ((DiscoveryActivity)getActivity()).onMovieSelected(movie, view);
+        }
+    };
 }

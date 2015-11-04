@@ -41,7 +41,7 @@ public class DiscoverViewHolder extends BaseViewHolder<Movie>
             @Override
             public void onClick(View v)
             {
-                DetailsActivity.launch(itemView.getContext(), movie, v);
+                movie.getOnSelectedListener().onMovieSelected(movie, v);
             }
         });
     }
