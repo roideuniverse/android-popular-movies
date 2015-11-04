@@ -10,6 +10,7 @@ import android.support.v4.content.Loader;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -47,6 +48,17 @@ import roide.nanod.popularmovies.util.SortOrder;
 public class DiscoveryFragment extends BaseFragment
 {
     private static final String SORT_ORDER = "sort-order";
+    private static final String ARG_TWO_PANE = "arg-two-pane";
+
+    public static DiscoveryFragment newInstance(boolean isTwoPane)
+    {
+        DiscoveryFragment fragment = new DiscoveryFragment();
+        Bundle bundle = new Bundle();
+        bundle.putBoolean(ARG_TWO_PANE, isTwoPane);
+        fragment.setArguments(bundle);
+        return fragment;
+    }
+
     private SwipeRefreshRecyclerView mSwipeRefreshRecyclerView;
     private RecyclerView mRecyclerView;
     private BaseAdapter mBaseAdapter;
@@ -63,6 +75,8 @@ public class DiscoveryFragment extends BaseFragment
 
     private int mColCount = 2;
     private int mActiveMenuItem = -1;
+
+    private boolean mIsTwoPane;
 
     private ArrayList<String> mSortMenuSpinnerList = new ArrayList<>();
     private Spinner.OnItemSelectedListener mSortItemSelectedListener = new AdapterView.OnItemSelectedListener()
@@ -244,7 +258,7 @@ public class DiscoveryFragment extends BaseFragment
         {
             mColCount++;
         }
-
+        mIsTwoPane = getArguments().getBoolean(ARG_TWO_PANE);
         return inflater.inflate(R.layout.fragment_main_discovery, container, false);
     }
 
@@ -363,7 +377,7 @@ public class DiscoveryFragment extends BaseFragment
                             addAll(movies);
                             if(mBaseAdapter == null)
                             {
-                                mBaseAdapter = new BaseAdapter(mMoviesList);
+                                mBaseAdapter = new BaseAdapter(mMoviesList, mIsTwoPane);
                                 mBaseAdapter.setOnLoadMoreListener(mOnLoadMoreListener);
                                 mRecyclerView.addItemDecoration(new DiscoverItemDecor(mColCount));
                                 mRecyclerView.setAdapter(mBaseAdapter);

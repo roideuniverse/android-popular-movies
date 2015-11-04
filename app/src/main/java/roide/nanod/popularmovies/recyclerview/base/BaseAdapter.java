@@ -20,10 +20,12 @@ public class BaseAdapter extends RecyclerView.Adapter<BaseViewHolder>
     private WidgetLoadMore mWidgetLoadMore;
     private OnLoadMoreListener mLoadMoreListener;
     private boolean mLoadMoreEnabled;
+    private boolean mAutoSelectFirst;
 
-    public BaseAdapter(List<BaseModel> movies)
+    public BaseAdapter(List<BaseModel> movies, boolean autoSelectFirst)
     {
         mModelList = movies;
+        mAutoSelectFirst = autoSelectFirst;
     }
 
     @Override
@@ -31,8 +33,8 @@ public class BaseAdapter extends RecyclerView.Adapter<BaseViewHolder>
     {
         if(viewType == Movie.VIEW_TYPE)
         {
-            View root = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.element_discover_grid_view,
-                    viewGroup, false);
+            View root = LayoutInflater.from(viewGroup.getContext())
+                .inflate(R.layout.element_discover_grid_view, viewGroup, false);
             return new DiscoverViewHolder(root);
         }
         else if(viewType == LoadMoreModel.VIEW_TYPE && mLoadMoreEnabled)
@@ -54,6 +56,15 @@ public class BaseAdapter extends RecyclerView.Adapter<BaseViewHolder>
         else
         {
             baseViewHolder.bind(mModelList.get(position));
+        }
+
+        if(mAutoSelectFirst && position == 0)
+        {
+            if(baseViewHolder instanceof  DiscoverViewHolder)
+            {
+                ((DiscoverViewHolder) baseViewHolder).doCustomClick();
+                mAutoSelectFirst = false;
+            }
         }
     }
 

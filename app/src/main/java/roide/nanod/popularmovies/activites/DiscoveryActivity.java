@@ -36,7 +36,8 @@ public class DiscoveryActivity extends BaseActivity
         {
             getSupportFragmentManager()
                     .beginTransaction()
-                    .replace(R.id.activity_main_frag_container, new DiscoveryFragment())
+                    .replace(R.id.activity_main_frag_container,
+                        DiscoveryFragment.newInstance(mIsTwoPane))
                     .commit();
         }
     }
