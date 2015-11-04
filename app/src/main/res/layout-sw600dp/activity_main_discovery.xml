@@ -1,0 +1,30 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:tools="http://schemas.android.com/tools"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:baselineAligned="false"
+              android:divider="?attr/dividerVertical"
+              android:orientation="horizontal"
+              android:showDividers="middle"
+    >
+
+    <!--
+    This layout is a two-pane layout for master/detail flow.
+
+    -->
+
+    <FrameLayout
+        android:id="@+id/activity_main_frag_container"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        />
+
+    <FrameLayout
+        android:id="@+id/weather_detail_container"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        />
+
+</LinearLayout>
