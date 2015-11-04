@@ -10,7 +10,6 @@ import android.support.v4.content.Loader;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -383,10 +382,7 @@ public class DiscoveryFragment extends BaseFragment
                             {
                                 initBaseAdapter();
                             }
-                            else
-                            {
-                                mBaseAdapter.notifyDataSetChanged();
-                            }
+                            mBaseAdapter.notifyDataSetChanged();
                         }
                         mSwipeRefreshRecyclerView.post(new Runnable() {
                             @Override
@@ -423,8 +419,8 @@ public class DiscoveryFragment extends BaseFragment
 
     private void initBaseAdapter()
     {
-        mMoviesList = new ArrayList<>();
-        mBaseAdapter = new BaseAdapter(mMoviesList, mIsTwoPane);
+        if(mMoviesList == null) mMoviesList = new ArrayList<>();
+        if(mBaseAdapter == null) mBaseAdapter = new BaseAdapter(mMoviesList, mIsTwoPane);
         mBaseAdapter.setOnLoadMoreListener(mOnLoadMoreListener);
         mRecyclerView.addItemDecoration(new DiscoverItemDecor(mColCount));
         mRecyclerView.setAdapter(mBaseAdapter);
