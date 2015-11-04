@@ -85,10 +85,13 @@ public class DiscoveryFragment extends BaseFragment
         public void onItemSelected(AdapterView<?> parent, View view, int position, long id)
         {
             mActiveMenuItem = position;
-            if(getSortOrder(position) != mCurrentSortOrder && mMoviesList != null)
+            if(getSortOrder(position) != mCurrentSortOrder)
             {
                 mCurrentSortOrder = getSortOrder(position);
-                reloadData();
+                if(mMoviesList != null || mCurrentSortOrder == SortOrder.FAVORITE)
+                {
+                    reloadData();
+                }
             }
         }
 
@@ -325,6 +328,7 @@ public class DiscoveryFragment extends BaseFragment
     {
         if(mCurrentSortOrder == SortOrder.FAVORITE)
         {
+            if(mBaseAdapter == null) initBaseAdapter();
             mBaseAdapter.enableLoadMore(false);
             mSwipeRefreshRecyclerView.setEnabled(false);
 
@@ -377,11 +381,9 @@ public class DiscoveryFragment extends BaseFragment
                             addAll(movies);
                             if(mBaseAdapter == null)
                             {
-                                mBaseAdapter = new BaseAdapter(mMoviesList, mIsTwoPane);
-                                mBaseAdapter.setOnLoadMoreListener(mOnLoadMoreListener);
-                                mRecyclerView.addItemDecoration(new DiscoverItemDecor(mColCount));
-                                mRecyclerView.setAdapter(mBaseAdapter);
-                            } else
+                                initBaseAdapter();
+                            }
+                            else
                             {
                                 mBaseAdapter.notifyDataSetChanged();
                             }
@@ -417,6 +419,15 @@ public class DiscoveryFragment extends BaseFragment
                     }
                 }).execute();
         }
+    }
+
+    private void initBaseAdapter()
+    {
+        mMoviesList = new ArrayList<>();
+        mBaseAdapter = new BaseAdapter(mMoviesList, mIsTwoPane);
+        mBaseAdapter.setOnLoadMoreListener(mOnLoadMoreListener);
+        mRecyclerView.addItemDecoration(new DiscoverItemDecor(mColCount));
+        mRecyclerView.setAdapter(mBaseAdapter);
     }
 
     private void addAll(List<Movie> movieList)

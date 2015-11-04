@@ -31,16 +31,14 @@ public class DiscoverViewHolder extends BaseViewHolder<Movie>
         String url = Util.getW154ImageUrl(movie.getPoster_path());
         Picasso.with(itemView.getContext()).load(url).into(mImageView);
 
-        bindOnImageClickListener(mImageView, movie);
+        bindOnImageClickListener(itemView, movie);
     }
 
-    private void bindOnImageClickListener(ImageView imageView, final Movie movie)
+    private void bindOnImageClickListener(View imageView, final Movie movie)
     {
-        imageView.setOnClickListener(new View.OnClickListener()
-        {
+        imageView.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v)
-            {
+            public void onClick(View v) {
                 movie.getOnSelectedListener().onMovieSelected(movie, v);
             }
         });
@@ -48,6 +46,6 @@ public class DiscoverViewHolder extends BaseViewHolder<Movie>
 
     public void doCustomClick()
     {
-        mImageView.callOnClick();
+        mImageView.performClick();
     }
 }
