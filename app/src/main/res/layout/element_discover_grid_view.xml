@@ -13,6 +13,7 @@
         android:adjustViewBounds="true"
         android:scaleType="centerCrop"
         android:transitionName="@string/transition_movie_display_image"
+        android:layout_gravity="center"
         />
 
 </roide.nanod.popularmovies.ui.TallCardView>

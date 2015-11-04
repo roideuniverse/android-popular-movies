@@ -45,7 +45,7 @@ public class DiscoverItemDecor extends RecyclerView.ItemDecoration
         }
         else if(colNumber == 0)
         {
-            outRect.left = outRect.left *2;
+            outRect.left = outRect.left * 2;
         }
 
         /**

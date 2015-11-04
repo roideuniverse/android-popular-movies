@@ -47,7 +47,7 @@ public class DetailsActivity extends BaseActivity
             return;
         }
 
-        DetailsActivityFragment fragment = DetailsActivityFragment.newInstance(mMovie);
+        DetailsActivityFragment fragment = DetailsActivityFragment.newInstance(mMovie, false);
         getSupportFragmentManager()
                 .beginTransaction()
                 .replace(R.id.activity_details_fragment_container, fragment)

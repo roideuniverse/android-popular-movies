@@ -7,7 +7,6 @@ import android.os.Bundle;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -43,12 +42,19 @@ import roide.nanod.popularmovies.util.Util;
 public class DetailsActivityFragment extends BaseFragment implements AppBarLayout.OnOffsetChangedListener
 {
     private static final String ARG_MOVIE = "arg-movie";
+    private static final String ARG_IS_TWO_PANE = "arg-two-pane";
 
-    public static DetailsActivityFragment newInstance(Movie movie)
+    public interface OnSelectedListener
+    {
+        void onMovieSelected(Movie movie, View view);
+    }
+
+    public static DetailsActivityFragment newInstance(Movie movie, boolean isTwoPane)
     {
         DetailsActivityFragment fragment = new DetailsActivityFragment();
         Bundle args = new Bundle();
         args.putParcelable(ARG_MOVIE, movie);
+        args.putBoolean(ARG_IS_TWO_PANE, isTwoPane);
         fragment.setArguments(args);
         return fragment;
     }
@@ -75,6 +81,7 @@ public class DetailsActivityFragment extends BaseFragment implements AppBarLayou
     private Movie mMovie;
     private String mTrailerKey;
     private MenuItem mShareItem;
+    private boolean mIsTwoPane;
 
     public DetailsActivityFragment()
     {
@@ -85,6 +92,7 @@ public class DetailsActivityFragment extends BaseFragment implements AppBarLayou
                              Bundle savedInstanceState)
     {
         mMovie = getArguments().getParcelable(ARG_MOVIE);
+        mIsTwoPane = getArguments().getBoolean(ARG_IS_TWO_PANE);
         setHasOptionsMenu(true);
         return inflater.inflate(R.layout.fragment_details, container, false);
     }
@@ -136,9 +144,16 @@ public class DetailsActivityFragment extends BaseFragment implements AppBarLayou
         {
             loadTrailers();
             loadReviews();
-            getBaseActivity().setSupportActionBar(mToolbar);
-            getBaseActivity().getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-            getBaseActivity().setTitle(mMovie.getTitle());
+            if(! mIsTwoPane)
+            {
+                getBaseActivity().setSupportActionBar(mToolbar);
+                getBaseActivity().getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+                getBaseActivity().setTitle(mMovie.getTitle());
+            }
+            else
+            {
+                mToolbar.setVisibility(View.GONE);
+            }
             mMovie.setIsFavorite(FavoriteDbUtil.isFavorite(mMovie, getContext()));
             refreshFabUI();
         }
@@ -207,27 +222,21 @@ public class DetailsActivityFragment extends BaseFragment implements AppBarLayou
     private void loadTrailers() {
         String apiKey = getString(R.string.api_key);
         MoviesRequestBuilder.getInstance().getVideos(mMovie.getId(), apiKey,
-            new Callback<Videos>()
-            {
+            new Callback<Videos>() {
                 @Override
-                public void success(Videos videos, Response response)
-                {
+                public void success(Videos videos, Response response) {
                     mTrailerProgressBar.setVisibility(View.GONE);
-                    for (Videos.TrailerDetails trailerDetails : videos.getResults())
-                    {
-                        if (mTrailerKey == null)
-                        {
+                    for (Videos.TrailerDetails trailerDetails : videos.getResults()) {
+                        if (mTrailerKey == null) {
                             mTrailerKey = trailerDetails.getKey();
                         }
                         mTrailerHeader.setVisibility(View.VISIBLE);
                         TrailerRowWidget widget = new TrailerRowWidget(getContext());
                         widget.setTrailerDetails(trailerDetails);
                         mTrailerContainer.addView(widget);
-                        if (mTrailerKey == null && mShareItem != null)
-                        {
+                        if (mTrailerKey == null && mShareItem != null) {
                             mShareItem.setVisible(false);
-                        } else if (mTrailerKey != null && mShareItem != null)
-                        {
+                        } else if (mTrailerKey != null && mShareItem != null) {
                             mShareItem.setVisible(true);
                         }
                     }

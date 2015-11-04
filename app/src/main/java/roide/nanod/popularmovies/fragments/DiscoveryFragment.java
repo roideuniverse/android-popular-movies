@@ -10,7 +10,6 @@ import android.support.v4.content.Loader;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -28,6 +27,7 @@ import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 import roide.nanod.popularmovies.R;
+import roide.nanod.popularmovies.activites.DiscoveryActivity;
 import roide.nanod.popularmovies.database.FavoriteDbContract;
 import roide.nanod.popularmovies.database.FavoriteMovieContentProvider;
 import roide.nanod.popularmovies.network.apibuilders.DiscoverMoviesRequestBuilder;
@@ -62,6 +62,7 @@ public class DiscoveryFragment extends BaseFragment
     private boolean mIsLoaderInitialized;
 
     private int mColCount = 2;
+    private int mActiveMenuItem = -1;
 
     private ArrayList<String> mSortMenuSpinnerList = new ArrayList<>();
     private Spinner.OnItemSelectedListener mSortItemSelectedListener = new AdapterView.OnItemSelectedListener()
@@ -69,6 +70,7 @@ public class DiscoveryFragment extends BaseFragment
         @Override
         public void onItemSelected(AdapterView<?> parent, View view, int position, long id)
         {
+            mActiveMenuItem = position;
             if(getSortOrder(position) != mCurrentSortOrder && mMoviesList != null)
             {
                 mCurrentSortOrder = getSortOrder(position);
@@ -137,7 +139,7 @@ public class DiscoveryFragment extends BaseFragment
             if(mCurrentSortOrder == SortOrder.FAVORITE)
             {
                 mMoviesList.clear();
-                mMoviesList.addAll(mFavoriteMovieList);
+                addAll(mFavoriteMovieList);
                 mBaseAdapter.notifyDataSetChanged();
             }
             mIsLoaderInitialized = true;
@@ -275,6 +277,10 @@ public class DiscoveryFragment extends BaseFragment
             SortMenuActionView actionMenuView = new SortMenuActionView(
                     getActivity().getApplicationContext(), mSortMenuSpinnerList);
             sortItem.setActionView(actionMenuView);
+            if(mActiveMenuItem != -1)
+            {
+                actionMenuView.getSpinner().setSelection(mActiveMenuItem);
+            }
             actionMenuView.getSpinner().setOnItemSelectedListener(mSortItemSelectedListener);
         }
 
@@ -315,7 +321,7 @@ public class DiscoveryFragment extends BaseFragment
             else
             {
                 mMoviesList.clear();
-                mMoviesList.addAll(mFavoriteMovieList);
+                addAll(mFavoriteMovieList);
                 mBaseAdapter.notifyDataSetChanged();
             }
         }
@@ -411,6 +417,7 @@ public class DiscoveryFragment extends BaseFragment
             {
                 continue;
             }
+            movie.setOnSelectedListener(mOnSelectedListener);
             mMoviesList.add(movie);
         }
     }
@@ -423,4 +430,14 @@ public class DiscoveryFragment extends BaseFragment
         }
         return false;
     }
+
+    private DetailsActivityFragment.OnSelectedListener mOnSelectedListener =
+        new DetailsActivityFragment.OnSelectedListener()
+        {
+        @Override
+        public void onMovieSelected(Movie movie, View view)
+        {
+            ((DiscoveryActivity)getActivity()).onMovieSelected(movie, view);
+        }
+    };
 }

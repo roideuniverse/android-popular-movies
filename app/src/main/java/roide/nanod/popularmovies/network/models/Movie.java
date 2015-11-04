@@ -3,6 +3,7 @@ package roide.nanod.popularmovies.network.models;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import roide.nanod.popularmovies.fragments.DetailsActivityFragment;
 import roide.nanod.popularmovies.recyclerview.base.BaseModel;
 
 /**
@@ -23,6 +24,18 @@ public class Movie extends BaseModel implements Parcelable {
     private String poster_path;
     private int vote_count;
     private boolean mIsFavorite;
+
+    private DetailsActivityFragment.OnSelectedListener mOnSelectedListener;
+
+    public void setOnSelectedListener(DetailsActivityFragment.OnSelectedListener listener)
+    {
+        mOnSelectedListener = listener;
+    }
+
+    public DetailsActivityFragment.OnSelectedListener getOnSelectedListener()
+    {
+        return mOnSelectedListener;
+    }
 
     public Movie() {
     }
