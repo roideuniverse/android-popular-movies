@@ -1,5 +1,6 @@
 package roide.nanod.popularmovies.fragments;
 
+import android.content.res.Configuration;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -9,6 +10,7 @@ import android.support.v4.content.Loader;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -58,6 +60,8 @@ public class DiscoveryFragment extends BaseFragment
     private List<Movie> mFavoriteMovieList = new ArrayList<>();
 
     private boolean mIsLoaderInitialized;
+
+    private int mColCount = 2;
 
     private ArrayList<String> mSortMenuSpinnerList = new ArrayList<>();
     private Spinner.OnItemSelectedListener mSortItemSelectedListener = new AdapterView.OnItemSelectedListener()
@@ -165,7 +169,7 @@ public class DiscoveryFragment extends BaseFragment
         {
             if(position >= mMoviesList.size())
             {
-                return 2;
+                return mColCount;
             }
             return 1;
         }
@@ -233,6 +237,12 @@ public class DiscoveryFragment extends BaseFragment
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
     {
+        int orientation = getResources().getConfiguration().orientation;
+        if(orientation == Configuration.ORIENTATION_LANDSCAPE)
+        {
+            mColCount++;
+        }
+
         return inflater.inflate(R.layout.fragment_main_discovery, container, false);
     }
 
@@ -281,7 +291,7 @@ public class DiscoveryFragment extends BaseFragment
     @Override
     protected void prepareViews()
     {
-        GridLayoutManager gridLayoutManager = new GridLayoutManager(getContext(), 2);
+        GridLayoutManager gridLayoutManager = new GridLayoutManager(getContext(), mColCount);
         mRecyclerView = mSwipeRefreshRecyclerView.getRecyclerView();
         mRecyclerView.setHasFixedSize(true);
         mRecyclerView.setLayoutManager(gridLayoutManager);
@@ -349,7 +359,7 @@ public class DiscoveryFragment extends BaseFragment
                             {
                                 mBaseAdapter = new BaseAdapter(mMoviesList);
                                 mBaseAdapter.setOnLoadMoreListener(mOnLoadMoreListener);
-                                mRecyclerView.addItemDecoration(new DiscoverItemDecor());
+                                mRecyclerView.addItemDecoration(new DiscoverItemDecor(mColCount));
                                 mRecyclerView.setAdapter(mBaseAdapter);
                             } else
                             {
