@@ -10,6 +10,7 @@ import android.support.v4.content.Loader;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -46,8 +47,9 @@ import roide.nanod.popularmovies.util.SortOrder;
  */
 public class DiscoveryFragment extends BaseFragment
 {
-    private static final String SORT_ORDER = "sort-order";
+    private static final String ARG_SORT_ORDER = "sort-order";
     private static final String ARG_TWO_PANE = "arg-two-pane";
+    private static final String ARG_AUTO_SELECT = "arg-auto-select";
 
     public static DiscoveryFragment newInstance(boolean isTwoPane)
     {
@@ -61,7 +63,6 @@ public class DiscoveryFragment extends BaseFragment
     private SwipeRefreshRecyclerView mSwipeRefreshRecyclerView;
     private RecyclerView mRecyclerView;
     private BaseAdapter mBaseAdapter;
-    private SortOrder mCurrentSortOrder = SortOrder.MOST_POPULAR;
 
     private List<BaseModel> mMoviesList;
     private int mPageNumber = 1;
@@ -73,9 +74,20 @@ public class DiscoveryFragment extends BaseFragment
     private boolean mIsLoaderInitialized;
 
     private int mColCount = 2;
-    private int mActiveMenuItem = -1;
 
     private boolean mIsTwoPane;
+    private boolean mAutoSelectFirstItem = true;
+
+    private ArrayList<SortOrder> SORT_ORDER = new ArrayList<SortOrder>()
+    {
+        {
+            add(SortOrder.MOST_POPULAR);
+            add(SortOrder.HIGHEST_RATED);
+            add(SortOrder.FAVORITE);
+        }
+    };
+
+    private int mActiveMenuItem = -1;
 
     private ArrayList<String> mSortMenuSpinnerList = new ArrayList<>();
     private Spinner.OnItemSelectedListener mSortItemSelectedListener = new AdapterView.OnItemSelectedListener()
@@ -83,15 +95,13 @@ public class DiscoveryFragment extends BaseFragment
         @Override
         public void onItemSelected(AdapterView<?> parent, View view, int position, long id)
         {
-            mActiveMenuItem = position;
-            if(getSortOrder(position) != mCurrentSortOrder)
+            if(mActiveMenuItem != position && mMoviesList != null)
             {
-                mCurrentSortOrder = getSortOrder(position);
-                if(mMoviesList != null || mCurrentSortOrder == SortOrder.FAVORITE)
-                {
-                    reloadData();
-                }
+                mMoviesList.clear();
+                mBaseAdapter.notifyDataSetChanged();
             }
+            mActiveMenuItem = position;
+            reloadData();
         }
 
         @Override
@@ -152,7 +162,7 @@ public class DiscoveryFragment extends BaseFragment
                     }
                 }
             }
-            if(mCurrentSortOrder == SortOrder.FAVORITE)
+            if(mActiveMenuItem == SORT_ORDER.indexOf(SortOrder.FAVORITE))
             {
                 mMoviesList.clear();
                 addAll(mFavoriteMovieList);
@@ -206,33 +216,6 @@ public class DiscoveryFragment extends BaseFragment
         }
     };
 
-    public SortOrder getSortOrder(int position)
-    {
-        if(position == 0)
-        {
-            return SortOrder.MOST_POPULAR;
-        }
-        else if(position == 1)
-        {
-            return SortOrder.HIGHEST_RATED;
-        }
-
-        return SortOrder.FAVORITE;
-    }
-
-    public int getPositionForSortOrder(SortOrder sortOrder)
-    {
-        if(sortOrder == SortOrder.MOST_POPULAR)
-        {
-            return 0;
-        }
-        else if(sortOrder == SortOrder.HIGHEST_RATED)
-        {
-            return 1;
-        }
-        return 2;
-    }
-
     //================================================ //
     //================== Fragment ==================== //
     //================================================ //
@@ -268,7 +251,8 @@ public class DiscoveryFragment extends BaseFragment
     public void onSaveInstanceState(Bundle outState)
     {
         super.onSaveInstanceState(outState);
-        outState.putInt(SORT_ORDER, getPositionForSortOrder(mCurrentSortOrder));
+        outState.putInt(ARG_SORT_ORDER, mActiveMenuItem);
+        outState.putBoolean(ARG_AUTO_SELECT, mAutoSelectFirstItem);
 
     }
 
@@ -277,7 +261,8 @@ public class DiscoveryFragment extends BaseFragment
     {
         if(savedInstanceState != null)
         {
-            mCurrentSortOrder = getSortOrder(savedInstanceState.getInt(SORT_ORDER));
+            mActiveMenuItem = savedInstanceState.getInt(ARG_SORT_ORDER);
+            mAutoSelectFirstItem = savedInstanceState.getBoolean(ARG_AUTO_SELECT);
         }
         super.onViewStateRestored(savedInstanceState);
     }
@@ -325,7 +310,7 @@ public class DiscoveryFragment extends BaseFragment
     @Override
     protected void loadData()
     {
-        if(mCurrentSortOrder == SortOrder.FAVORITE)
+        if(mActiveMenuItem == SORT_ORDER.indexOf(SortOrder.FAVORITE))
         {
             if(mBaseAdapter == null) initBaseAdapter();
             mBaseAdapter.enableLoadMore(false);
@@ -353,33 +338,25 @@ public class DiscoveryFragment extends BaseFragment
             });
             DiscoverMoviesRequestBuilder.build(getContext())
                 .setPage(mPageNumber)
-                .setSortOrder(mCurrentSortOrder)
-                .setCallback(new Callback<List<Movie>>()
-                {
+                .setSortOrder(SORT_ORDER.get(mActiveMenuItem))
+                .setCallback(new Callback<List<Movie>>() {
                     @Override
-                    public void success(List<Movie> movies, Response response)
-                    {
-                        if(mLoadingMore == true)
-                        {
+                    public void success(List<Movie> movies, Response response) {
+                        if (mLoadingMore == true) {
                             mLoadingMore = false;
                             WidgetLoadMore wlm = mWidgetLoadMoreRef.get();
-                            if(wlm != null)
-                            {
+                            if (wlm != null) {
                                 wlm.setInProgress(false);
                             }
                             addAll(movies);
                             mBaseAdapter.notifyDataSetChanged();
-                        }
-                        else
-                        {
-                            if(mMoviesList != null)
-                            {
+                        } else {
+                            if (mMoviesList != null) {
                                 mMoviesList.clear();
                             }
 
                             addAll(movies);
-                            if(mBaseAdapter == null)
-                            {
+                            if (mBaseAdapter == null) {
                                 initBaseAdapter();
                             }
                             mBaseAdapter.notifyDataSetChanged();
@@ -394,20 +371,17 @@ public class DiscoveryFragment extends BaseFragment
                     }
 
                     @Override
-                    public void failure(RetrofitError error)
-                    {
+                    public void failure(RetrofitError error) {
                         mSwipeRefreshRecyclerView.post(new Runnable() {
                             @Override
                             public void run() {
                                 mSwipeRefreshRecyclerView.setRefreshing(false);
                             }
                         });
-                        if(mLoadingMore == true)
-                        {
+                        if (mLoadingMore == true) {
                             mLoadingMore = false;
                             WidgetLoadMore wlm = mWidgetLoadMoreRef.get();
-                            if(wlm != null)
-                            {
+                            if (wlm != null) {
                                 wlm.setInProgress(false);
                             }
 
@@ -419,11 +393,13 @@ public class DiscoveryFragment extends BaseFragment
 
     private void initBaseAdapter()
     {
+        mAutoSelectFirstItem = mAutoSelectFirstItem & mIsTwoPane;
         if(mMoviesList == null) mMoviesList = new ArrayList<>();
-        if(mBaseAdapter == null) mBaseAdapter = new BaseAdapter(mMoviesList, mIsTwoPane);
+        if(mBaseAdapter == null) mBaseAdapter = new BaseAdapter(mMoviesList, mAutoSelectFirstItem);
         mBaseAdapter.setOnLoadMoreListener(mOnLoadMoreListener);
         mRecyclerView.addItemDecoration(new DiscoverItemDecor(mColCount));
         mRecyclerView.setAdapter(mBaseAdapter);
+        mAutoSelectFirstItem = false;
     }
 
     private void addAll(List<Movie> movieList)
