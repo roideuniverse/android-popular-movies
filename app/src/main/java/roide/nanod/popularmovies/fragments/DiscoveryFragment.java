@@ -95,6 +95,11 @@ public class DiscoveryFragment extends BaseFragment
         @Override
         public void onItemSelected(AdapterView<?> parent, View view, int position, long id)
         {
+            if(mActiveMenuItem != position && mMoviesList != null)
+            {
+                mMoviesList.clear();
+                mBaseAdapter.notifyDataSetChanged();
+            }
             mActiveMenuItem = position;
             reloadData();
         }
@@ -388,6 +393,7 @@ public class DiscoveryFragment extends BaseFragment
 
     private void initBaseAdapter()
     {
+        mAutoSelectFirstItem = mAutoSelectFirstItem & mIsTwoPane;
         if(mMoviesList == null) mMoviesList = new ArrayList<>();
         if(mBaseAdapter == null) mBaseAdapter = new BaseAdapter(mMoviesList, mAutoSelectFirstItem);
         mBaseAdapter.setOnLoadMoreListener(mOnLoadMoreListener);
