@@ -46,6 +46,6 @@ public class DiscoverViewHolder extends BaseViewHolder<Movie>
 
     public void doCustomClick()
     {
-        mImageView.performClick();
+        itemView.performClick();
     }
 }

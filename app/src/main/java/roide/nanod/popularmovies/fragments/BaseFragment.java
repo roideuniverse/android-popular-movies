@@ -59,7 +59,7 @@ public abstract class BaseFragment extends Fragment
     public void onViewStateRestored(@Nullable Bundle savedInstanceState)
     {
         super.onViewStateRestored(savedInstanceState);
-        loadData();
+        //loadData();
     }
 
     private void throwInvalidActivityException()
