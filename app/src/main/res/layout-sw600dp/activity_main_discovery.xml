@@ -6,6 +6,7 @@
               android:divider="?attr/dividerVertical"
               android:orientation="horizontal"
               android:showDividers="middle"
+    android:fitsSystemWindows="true"
     >
 
     <!--
